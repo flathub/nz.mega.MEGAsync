@@ -82,9 +82,6 @@ modules:
         path: patches/0001-feat-add-AppData-manifest.patch
     modules:
 
-      # WARNING: contains CVE
-      #  * https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-14318
-      #  * https://github.com/weidai11/cryptopp/issues/869
       - name: cryptopp
         no-autogen: true
         make-args:
@@ -95,8 +92,8 @@ modules:
           - LIBDIR=/app/lib
         sources:
           - type: archive
-            url: https://github.com/weidai11/cryptopp/archive/CRYPTOPP_8_2_0.tar.gz
-            sha256: e3bcd48a62739ad179ad8064b523346abb53767bcbefc01fe37303412292343e
+            url: https://github.com/weidai11/cryptopp/archive/CRYPTOPP_8_3_0.tar.gz
+            sha256: 63304c6f943f435a4e385273e15abb69cff3b85a44663150bf5a6069b84abd43
         cleanup:
           - /bin
           - /share
@@ -105,8 +102,8 @@ modules:
         buildsystem: cmake-ninja
         sources:
           - type: archive
-            url: http://c-ares.haxx.se/download/c-ares-1.16.1.tar.gz
-            sha256: d08312d0ecc3bd48eee0a4cc0d2137c9f194e0a28de2028928c0f6cae85f86ce
+            url: http://c-ares.haxx.se/download/c-ares-1.17.1.tar.gz
+            sha256: d73dd0f6de824afd407ce10750ea081af47eba52b8a6cb307d220131ad93fc40
         cleanup:
           - /bin
 
