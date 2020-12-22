@@ -36,6 +36,11 @@ modules:
     build-commands:
       - |
         set -e
+        sed -i \
+          's|QFileDialog::DontUseNativeDialog, false|QFileDialog::DontUseNativeDialog, true|' \
+          MEGASync/{gui/MultiQFileDialog,MegaApplication}.cpp
+      - |
+        set -e
         cd MEGASync/mega
         ./autogen.sh
         ./configure \
