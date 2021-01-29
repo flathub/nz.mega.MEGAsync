@@ -8,9 +8,9 @@ finish-args:
   - --own-name=org.kde.StatusNotifierItem-2-1
   - --share=ipc
   - --share=network
-  - --socket=fallback-x11
   - --socket=pulseaudio
   - --socket=wayland
+  - --socket=x11
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
 command: megasync
