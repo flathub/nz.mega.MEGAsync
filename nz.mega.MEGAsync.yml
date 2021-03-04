@@ -67,7 +67,7 @@ modules:
     sources:
       - type: git
         url: 'https://github.com/meganz/MEGAsync.git'
-        tag: v4.3.7.0_Linux
+        tag: v4.4.0.0_Linux
       - type: shell
         dest: src/MEGASync
         commands:
