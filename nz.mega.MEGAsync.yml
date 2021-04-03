@@ -3,8 +3,9 @@ sdk: org.kde.Sdk
 runtime: org.kde.Platform
 runtime-version: '5.15'
 finish-args:
-  - --filesystem=~/MEGAsync:create
+  - --filesystem=~/MEGA:create
   - --filesystem=~/MEGAsync Downloads:create
+  - --filesystem=~/MEGAsync:create
   - --own-name=org.kde.StatusNotifierItem-2-1
   - --share=ipc
   - --share=network
