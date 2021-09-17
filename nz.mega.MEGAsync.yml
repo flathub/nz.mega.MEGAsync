@@ -99,8 +99,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/weidai11/cryptopp.git
-            tag: CRYPTOPP_8_3_0
-            commit: d71bc515eafc0a6418372f63ba0f058a55d25951
+            tag: CRYPTOPP_8_5_0
+            commit: f2102243e6fdd48c0b2a393a0993cca228f20573
             x-checker-data:
               type: json
               url: https://api.github.com/repos/weidai11/cryptopp/releases/latest
@@ -115,8 +115,8 @@ modules:
         buildsystem: cmake-ninja
         sources:
           - type: archive
-            url: http://c-ares.haxx.se/download/c-ares-1.17.1.tar.gz
-            sha256: d73dd0f6de824afd407ce10750ea081af47eba52b8a6cb307d220131ad93fc40
+            url: http://c-ares.haxx.se/download/c-ares-1.17.2.tar.gz
+            sha256: 4803c844ce20ce510ef0eb83f8ea41fa24ecaae9d280c468c582d2bb25b3913d
             x-checker-data:
               type: html
               url: http://c-ares.haxx.se/download/
@@ -148,7 +148,7 @@ modules:
           - type: git
             url: https://github.com/jedisct1/libsodium.git
             tag: 1.0.18-RELEASE
-            commit: 4f5e89fa84ce1d178a6765b8b46f2b6f91216677
+            commit: 940ef42797baa0278df6b7fd9e67c7590f87744b
             x-checker-data:
               type: json
               url: https://api.github.com/repos/jedisct1/libsodium/releases/latest
@@ -195,8 +195,8 @@ modules:
   - name: xrdb
     sources:
       - type: archive
-        url: https://www.x.org/releases/individual/app/xrdb-1.2.0.tar.gz
-        sha256: 7dec50e243d55c6a0623ff828355259b6a110de74a0c65c40529514324ef7938
+        url: https://www.x.org/releases/individual/app/xrdb-1.2.1.tar.gz
+        sha256: e674f5fb081a023e54878c0aac728dc30feb821207c989cff17a60f0c4a80ced
         x-checker-data:
           type: html
           url: https://www.x.org/releases/individual/app/
