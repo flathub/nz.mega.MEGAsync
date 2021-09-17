@@ -46,11 +46,12 @@ modules:
         ./autogen.sh
         ./configure \
           --prefix=/app
-      - qmake
-          PREFIX=/app
-          QMAKE_LIBDIR=/app/lib
-          CONFIG+=FULLREQUIREMENTS
-          MEGA.pro
+      - >-
+        qmake
+        PREFIX=/app
+        QMAKE_LIBDIR=/app/lib
+        CONFIG+=FULLREQUIREMENTS
+        MEGA.pro
       - lrelease MEGASync/MEGASync.pro
       - make -j${FLATPAK_BUILDER_N_JOBS}
       - make install
@@ -67,8 +68,16 @@ modules:
           -i /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
     sources:
       - type: git
-        url: 'https://github.com/meganz/MEGAsync.git'
+        url: https://github.com/meganz/MEGAsync.git
         tag: v4.5.3.0_Linux
+        commit: 52c43e9914b3a4e6415155535ce4bb8a5a014ce3
+        x-checker-data:
+          type: json
+          url: https://api.github.com/repos/meganz/MEGAsync/releases
+          tag-query: map(select(.tag_name | endswith("_Linux"))) | first | .tag_name
+          version-query: $tag | sub("^v"; "") | sub("_Linux$"; "")
+          timestamp-query: map(select(.tag_name==$tag)) | first | .published_at
+          is-main-source: true
       - type: shell
         dest: src/MEGASync
         commands:
@@ -88,9 +97,16 @@ modules:
           - PREFIX=/app
           - LIBDIR=/app/lib
         sources:
-          - type: archive
-            url: https://github.com/weidai11/cryptopp/archive/CRYPTOPP_8_3_0.tar.gz
-            sha256: 63304c6f943f435a4e385273e15abb69cff3b85a44663150bf5a6069b84abd43
+          - type: git
+            url: https://github.com/weidai11/cryptopp.git
+            tag: CRYPTOPP_8_3_0
+            commit: d71bc515eafc0a6418372f63ba0f058a55d25951
+            x-checker-data:
+              type: json
+              url: https://api.github.com/repos/weidai11/cryptopp/releases/latest
+              tag-query: .tag_name
+              version-query: .tag_name
+              timestamp-query: .published_at
         cleanup:
           - /bin
           - /share
@@ -101,6 +117,10 @@ modules:
           - type: archive
             url: http://c-ares.haxx.se/download/c-ares-1.17.1.tar.gz
             sha256: d73dd0f6de824afd407ce10750ea081af47eba52b8a6cb307d220131ad93fc40
+            x-checker-data:
+              type: html
+              url: http://c-ares.haxx.se/download/
+              pattern: (c-ares-(\d\.\d+\.?\d*).tar.gz)
         cleanup:
           - /bin
 
@@ -125,9 +145,16 @@ modules:
 
       - name: libsodium
         sources:
-          - type: archive
-            url: https://github.com/jedisct1/libsodium/archive/1.0.18.tar.gz
-            sha256: d59323c6b712a1519a5daf710b68f5e7fde57040845ffec53850911f10a5d4f4
+          - type: git
+            url: https://github.com/jedisct1/libsodium.git
+            tag: 1.0.18-RELEASE
+            commit: 4f5e89fa84ce1d178a6765b8b46f2b6f91216677
+            x-checker-data:
+              type: json
+              url: https://api.github.com/repos/jedisct1/libsodium/releases/latest
+              tag-query: .tag_name
+              version-query: .tag_name
+              timestamp-query: .published_at
 
       - name: libmediainfo
         buildsystem: cmake-ninja
@@ -170,6 +197,10 @@ modules:
       - type: archive
         url: https://www.x.org/releases/individual/app/xrdb-1.2.0.tar.gz
         sha256: 7dec50e243d55c6a0623ff828355259b6a110de74a0c65c40529514324ef7938
+        x-checker-data:
+          type: html
+          url: https://www.x.org/releases/individual/app/
+          pattern: (xrdb-(\d\.\d+\.?\d*).tar.gz)
     modules:
 
       - name: libXmu
@@ -177,3 +208,7 @@ modules:
           - type: archive
             url: https://www.x.org/releases/individual/lib/libXmu-1.1.3.tar.gz
             sha256: 5bd9d4ed1ceaac9ea023d86bf1c1632cd3b172dce4a193a72a94e1d9df87a62e
+            x-checker-data:
+              type: html
+              url: https://www.x.org/releases/individual/lib/
+              pattern: (libXmu-(\d\.\d+\.?\d*).tar.gz)
