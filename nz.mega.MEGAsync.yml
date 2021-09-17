@@ -139,7 +139,7 @@ modules:
         sources:
           - type: svn
             url: https://svn.code.sf.net/p/freeimage/svn/
-            revision: r1859
+            revision: r1889
           - type: patch
             path: patches/freeimage-makefile-install.patch
 
