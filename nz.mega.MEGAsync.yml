@@ -3,6 +3,7 @@ sdk: org.kde.Sdk
 runtime: org.kde.Platform
 runtime-version: '5.15-21.08'
 finish-args:
+  - --device=dri
   - --filesystem=~/MEGA:create
   - --filesystem=~/MEGAsync Downloads:create
   - --filesystem=~/MEGAsync:create
