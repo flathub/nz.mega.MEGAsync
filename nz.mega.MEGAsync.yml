@@ -1,7 +1,7 @@
 id: nz.mega.MEGAsync
 sdk: org.kde.Sdk
 runtime: org.kde.Platform
-runtime-version: '5.15-21.08'
+runtime-version: 5.15-21.08
 finish-args:
   - --device=dri
   - --filesystem=~/MEGA:create
@@ -116,8 +116,8 @@ modules:
         buildsystem: cmake-ninja
         sources:
           - type: archive
-            url: http://c-ares.haxx.se/download/c-ares-1.17.2.tar.gz
-            sha256: 4803c844ce20ce510ef0eb83f8ea41fa24ecaae9d280c468c582d2bb25b3913d
+            url: http://c-ares.haxx.se/download/c-ares-1.18.0.tar.gz
+            sha256: 71c19708ed52a60ec6f14a4a48527187619d136e6199683e77832c394b0b0af8
             x-checker-data:
               type: html
               url: http://c-ares.haxx.se/download/
