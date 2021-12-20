@@ -12,7 +12,6 @@ finish-args:
   - --share=network
   - --socket=pulseaudio
   - --socket=wayland
-  - --socket=x11
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
 command: megasync
@@ -87,6 +86,8 @@ modules:
       # https://github.com/meganz/MEGAsync/pull/510
       - type: patch
         path: patches/0001-feat-add-AppData-manifest.patch
+      - type: patch
+        path: patches/0003-SupportWayland.patch 
     modules:
 
       - name: cryptopp
