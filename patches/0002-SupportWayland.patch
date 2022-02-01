@@ -1,0 +1,56 @@
+diff --git a/src/MEGASync/gui/InfoDialog.cpp b/src/MEGASync/gui/InfoDialog.cpp
+index 77474e67..e6008da0 100644
+--- a/src/MEGASync/gui/InfoDialog.cpp
++++ b/src/MEGASync/gui/InfoDialog.cpp
+@@ -110,7 +110,7 @@ InfoDialog::InfoDialog(MegaApplication *app, QWidget *parent, InfoDialog* olddia
+         // To avoid issues with text input we implement a popup ourselves
+         // instead of using Qt::Popup by listening to the WindowDeactivate
+         // event.
+-        Qt::WindowFlags flags = Qt::FramelessWindowHint;
++        Qt::WindowFlags flags = Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint;
+ 
+         if (Platform::isTilingWindowManager())
+         {
+diff --git a/src/MEGASync/platform/linux/LinuxPlatform.cpp b/src/MEGASync/platform/linux/LinuxPlatform.cpp
+index 5f9e7170..08ca7f83 100644
+--- a/src/MEGASync/platform/linux/LinuxPlatform.cpp
++++ b/src/MEGASync/platform/linux/LinuxPlatform.cpp
+@@ -104,7 +104,8 @@ bool LinuxPlatform::isStartOnStartupActive()
+ bool LinuxPlatform::isTilingWindowManager()
+ {
+     static const QSet<QString> tiling_wms = {
+-        QString::fromUtf8("i3")
++        QString::fromUtf8("i3"),
++        QString::fromUtf8("sway")
+     };
+ 
+     return getValue("MEGASYNC_ASSUME_TILING_WM", false)
+@@ -309,13 +310,24 @@ QString LinuxPlatform::getWindowManagerName()
+ 
+     if (!cached)
+     {
+-        window_manager_name =
+-          getProperty(QX11Info::connection(),
+-                      QX11Info::appRootWindow(),
+-                      "_NET_WM_NAME");
++    	if (qgetenv("XDG_SESSION_TYPE") == "wayland") {
++    		window_manager_name = qgetenv("XDG_CURRENT_DESKTOP").toStdString();
++    	} else {
++		    xcb_connection_t* conn = QX11Info::connection();
++		    if (conn != nullptr) {
++			    window_manager_name =
++					    getProperty(conn,
++					                QX11Info::appRootWindow(),
++					                "_NET_WM_NAME");
++		    } else {
++			    window_manager_name = "";
++		    }
++    	}
++
+ 
+         cached = true;
+     }
++    NO_X11:
+ 
+     return QString::fromStdString(window_manager_name);
+ }
