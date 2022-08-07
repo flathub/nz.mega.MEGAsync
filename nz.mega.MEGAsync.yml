@@ -100,8 +100,8 @@ modules:
         sources:
           - type: git
             url: https://github.com/weidai11/cryptopp.git
-            tag: CRYPTOPP_8_6_0
-            commit: 69bf6b53052b59ccb57ce068ce741988ae087317
+            tag: CRYPTOPP_8_7_0
+            commit: 511806c0eba8ba5b5cedd4b4a814e96df92864a6
             x-checker-data:
               type: json
               url: https://api.github.com/repos/weidai11/cryptopp/releases/latest
