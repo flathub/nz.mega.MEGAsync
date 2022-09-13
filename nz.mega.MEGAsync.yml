@@ -142,7 +142,7 @@ modules:
         sources:
           - type: svn
             url: https://svn.code.sf.net/p/freeimage/svn/
-            revision: r1889
+            revision: r1903
           - type: patch
             path: patches/freeimage-makefile-install.patch
 
@@ -165,8 +165,8 @@ modules:
         builddir: true
         sources:
           - type: archive
-            url: http://mediaarea.net/download/source/libmediainfo/20.09/libmediainfo_20.09.tar.xz
-            sha256: d07ce857330a9f9eedc4e5748f8022af1e9540e88a732d4e45c818c8ec4dd196
+            url: http://mediaarea.net/download/source/libmediainfo/22.06/libmediainfo_22.06.tar.xz
+            sha256: b279a84f2f3bb353664c4e7d5feedbac98b1fd0d4d4131ab73317541f7fec2f6
         modules:
 
           - name: libzen
@@ -175,14 +175,14 @@ modules:
             builddir: true
             sources:
               - type: archive
-                url: https://mediaarea.net/download/source/libzen/0.4.38/libzen_0.4.38.tar.gz
-                sha256: ad98fccec235ed76a40e7da8856f0bcc9c8d07cafe4c3ce30c47407760add786
+                url: https://mediaarea.net/download/source/libzen/0.4.39/libzen_0.4.39.tar.xz
+                sha256: cded5d7774294e7d5b42768ceb285243709b6e99eec6e980a3cf7f0890dbb622
 
       - name: libuv
         sources:
           - type: archive
-            url: https://dist.libuv.org/dist/v1.39.0/libuv-v1.39.0.tar.gz
-            sha256: 5c52de5bdcfb322dbe10f98feb56e45162e668ad08bc28ab4b914d4f79911697
+            url: https://dist.libuv.org/dist/v1.44.2/libuv-v1.44.2.tar.gz
+            sha256: ccfcdc968c55673c6526d8270a9c8655a806ea92468afcbcabc2b16040f03cb4
 
       - name: LibRaw
         config-opts:
