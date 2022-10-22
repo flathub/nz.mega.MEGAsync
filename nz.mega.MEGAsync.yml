@@ -97,6 +97,15 @@ modules:
         make-install-args:
           - PREFIX=/app
           - LIBDIR=/app/lib
+        build-options:
+          # Generally speaking, you should not use Link Time Optimization for
+          # Crypto++. There are three reasons for the recommendation. First, we
+          # don't want the linker changing object files or the executables
+          # produced during link. The linker's job is to combine object files,
+          # not attempt to peephole optimize them.
+          # https://www.cryptopp.com/wiki/Link_Time_Optimization
+          cflags: -fno-lto
+          cxxflags: -fno-lto
         sources:
           - type: git
             url: https://github.com/weidai11/cryptopp.git
