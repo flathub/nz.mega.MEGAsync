@@ -207,8 +207,8 @@ modules:
   - name: xrdb
     sources:
       - type: archive
-        url: https://www.x.org/releases/individual/app/xrdb-1.2.1.tar.gz
-        sha256: e674f5fb081a023e54878c0aac728dc30feb821207c989cff17a60f0c4a80ced
+        url: https://www.x.org/releases/individual/app/xrdb-1.2.2.tar.gz
+        sha256: db2d774a35ae2f7e7ac61cc2de0dcae27fc2aa14399c35721f8300e63ea73549
         x-checker-data:
           type: html
           url: https://www.x.org/releases/individual/app/
