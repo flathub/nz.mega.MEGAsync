@@ -70,8 +70,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/meganz/MEGAsync.git
-        tag: v4.9.1.0_Linux
-        commit: fe0cc7f9e151c60deae7e534960f5826ada1f75e
+        tag: v4.9.5.0_Linux
+        commit: 165d50642a23eb1835ad339ab52a4ceb560c6845
         x-checker-data:
           type: json
           url: https://api.github.com/repos/meganz/MEGAsync/releases
