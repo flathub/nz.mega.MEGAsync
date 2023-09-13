@@ -160,7 +160,7 @@ modules:
           - type: git
             url: https://github.com/jedisct1/libsodium.git
             tag: 1.0.19-RELEASE
-            commit: b795a93fa8b89de35f881e282323f78b081af4e1
+            commit: fb4533b0a941b3a5b1db5687d1b008a5853d1f29
             x-checker-data:
               type: json
               url: https://api.github.com/repos/jedisct1/libsodium/releases/latest
