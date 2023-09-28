@@ -7,7 +7,6 @@ finish-args:
   - --filesystem=~/MEGA:create
   - --filesystem=~/MEGAsync Downloads:create
   - --filesystem=~/MEGAsync:create
-  - --own-name=org.kde.*
   - --share=ipc
   - --share=network
   - --socket=pulseaudio
