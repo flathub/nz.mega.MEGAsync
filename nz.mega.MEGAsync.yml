@@ -69,8 +69,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/meganz/MEGAsync.git
-        tag: v4.10.0.0_Linux
-        commit: b87df49c935ca88d2a80f9fd3aa5b88dc07f7d95
+        tag: v4.9.6.0_Linux
+        commit: 6ddfea973eb32f160bfe28f0489b2596e98592de
         x-checker-data:
           type: json
           url: https://api.github.com/repos/meganz/MEGAsync/releases
@@ -124,8 +124,8 @@ modules:
         buildsystem: cmake-ninja
         sources:
           - type: archive
-            url: http://c-ares.haxx.se/download/c-ares-1.21.0.tar.gz
-            sha256: cd7aa3af1d3ee780d6437039a7ddb7f1ec029f9c4f7aabb0197e384eb5bc2f2d
+            url: http://c-ares.haxx.se/download/c-ares-1.22.1.tar.gz
+            sha256: f67c180deb799c670d9dda995a18ce06f6c7320b6c6363ff8fa85b77d0da9db8
             x-checker-data:
               type: html
               url: http://c-ares.haxx.se/download/
