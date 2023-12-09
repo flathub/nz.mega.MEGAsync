@@ -11,7 +11,7 @@ finish-args:
   - --share=network
   - --socket=pulseaudio
   - --socket=wayland
-  - --socket=fallback-x11
+  - --socket=x11
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
 command: megasync
