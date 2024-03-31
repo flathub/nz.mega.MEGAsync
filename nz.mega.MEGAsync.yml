@@ -134,8 +134,8 @@ modules:
         buildsystem: cmake-ninja
         sources:
           - type: archive
-            url: http://c-ares.haxx.se/download/c-ares-1.28.0.tar.gz
-            sha256: 3c92febbdebdfe9dea0e037083f55357745e0df34243f9660eed8757db617430
+            url: http://c-ares.haxx.se/download/c-ares-1.28.1.tar.gz
+            sha256: 675a69fc54ddbf42e6830bc671eeb6cd89eeca43828eb413243fd2c0a760809d
             x-checker-data:
               type: html
               url: http://c-ares.haxx.se/download/
