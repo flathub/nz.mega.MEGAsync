@@ -133,13 +133,16 @@ modules:
       - name: c-ares
         buildsystem: cmake-ninja
         sources:
-          - type: archive
-            url: http://c-ares.haxx.se/download/c-ares-1.29.0.tar.gz
-            sha256: 0b89fa425b825c4c7bc708494f374ae69340e4d1fdc64523bdbb2750bfc02ea7
+          - type: git
+            url: https://github.com/c-ares/c-ares.git
+            tag: v1.32.1
+            sha256: 63be2c4ee121faa47e9766f735b4cde750fff2c563f81c11e572d3dc6401e5e7
             x-checker-data:
-              type: html
-              url: http://c-ares.haxx.se/download/
-              pattern: (c-ares-(\d\.\d+\.?\d*).tar.gz)
+              type: json
+              url: https://api.github.com/repos/c-ares/c-ares/releases/latest
+              tag-query: .tag_name
+              version-query: .tag_name
+              timestamp-query: .published_at
         cleanup:
           - /bin
 
@@ -160,7 +163,7 @@ modules:
         sources:
           - type: svn
             url: https://svn.code.sf.net/p/freeimage/svn/
-            revision: r1903
+            revision: r1907
           - type: patch
             path: patches/freeimage-makefile-install.patch
 
@@ -183,8 +186,8 @@ modules:
         builddir: true
         sources:
           - type: archive
-            url: http://mediaarea.net/download/source/libmediainfo/22.06/libmediainfo_22.06.tar.xz
-            sha256: b279a84f2f3bb353664c4e7d5feedbac98b1fd0d4d4131ab73317541f7fec2f6
+            url: https://old.mediaarea.net/download/source/libmediainfo/24.06/libmediainfo_24.06.tar.xz
+            sha256: 0683f28a2475dc2417205ba528debccc407da4d9fa6516eb4b75b3ff7244e96e
         modules:
 
           - name: libzen
@@ -193,14 +196,14 @@ modules:
             builddir: true
             sources:
               - type: archive
-                url: https://mediaarea.net/download/source/libzen/0.4.39/libzen_0.4.39.tar.xz
-                sha256: cded5d7774294e7d5b42768ceb285243709b6e99eec6e980a3cf7f0890dbb622
+                url: https://old.mediaarea.net/download/source/libzen/0.4.41/libzen_0.4.41.tar.xz
+                sha256: 933bad3b7ecd29dc6bdc88a83645c83dfd098c15b0b90d6177a37fa1536704e8
 
       - name: libuv
         sources:
           - type: archive
-            url: https://dist.libuv.org/dist/v1.44.2/libuv-v1.44.2.tar.gz
-            sha256: ccfcdc968c55673c6526d8270a9c8655a806ea92468afcbcabc2b16040f03cb4
+            url: https://dist.libuv.org/dist/v1.48.0/libuv-v1.48.0.tar.gz
+            sha256: 7f1db8ac368d89d1baf163bac1ea5fe5120697a73910c8ae6b2fffb3551d59fb
 
       - name: LibRaw
         config-opts:
@@ -208,8 +211,8 @@ modules:
           - --disable-static
         sources:
           - type: archive
-            url: https://www.libraw.org/data/LibRaw-0.19.5.tar.gz
-            sha256: 40a262d7cc71702711a0faec106118ee004f86c86cc228281d12d16da03e02f5
+            url: https://www.libraw.org/data/LibRaw-0.21.2.tar.gz
+            sha256: fe7288013206854baf6e4417d0fb63ba4ed7227bf36fff021992671c2dd34b03
         cleanup:
           - /bin
 
