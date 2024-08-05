@@ -96,6 +96,9 @@ modules:
         options:
           - -d
           - src/MEGASync/mega
+      # https://github.com/meganz/MEGAsync/pull/979
+      - type: patch
+        path: patches/030-979.patch
     modules:
 
       - name: cryptopp
