@@ -1,5 +1,5 @@
---- a/src/gfx/freeimage.cpp
-+++ b/src/gfx/freeimage.cpp
+--- a/src/MEGASync/mega/src/gfx/freeimage.cpp
++++ b/src/MEGASync/mega/src/gfx/freeimage.cpp
 @@ -209,12 +209,6 @@ bool GfxProviderFreeImage::readbitmapFreeimage(FileSystemAccess*, const LocalPat
  
  #ifdef HAVE_FFMPEG
