@@ -4,6 +4,7 @@ runtime: org.kde.Platform
 runtime-version: 5.15-23.08
 finish-args:
   - --device=dri
+  - --env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons
   - --filesystem=~/MEGA:create
   - --filesystem=~/MEGAsync Downloads:create
   - --filesystem=~/MEGAsync:create
@@ -19,58 +20,34 @@ rename-icon: mega
 copy-icon: true
 rename-desktop-file: megasync.desktop
 cleanup:
-  - '*.a'
-  - '*.la'
+  - "*.a"
+  - "*.la"
   - /include
   - /lib/cmake
   - /lib/pkgconfig
   - /share/doc
   - /share/man
 modules:
-
   - name: MEGAsync
     buildsystem: simple
-    subdir: src
     build-options:
       env:
         DESKTOP_DESTDIR: /app
     build-commands:
-      - |
-        set -e
-        sed -i \
-          's|QFileDialog::DontUseNativeDialog, false|QFileDialog::DontUseNativeDialog, true|' \
-          MEGASync/{gui/MultiQFileDialog,MegaApplication}.cpp
-      - |
-        set -e
-        cd MEGASync/mega
-        ./autogen.sh
-        ./configure \
-          --prefix=/app
-      - >-
-        qmake
-        PREFIX=/app
-        QMAKE_LIBDIR=/app/lib
-        CONFIG+=FULLREQUIREMENTS
-        MEGA.pro
-      - lrelease MEGASync/MEGASync.pro
-      - make -j${FLATPAK_BUILDER_N_JOBS}
-      - make install
-      - install -D MEGASync/megasync -t /app/bin/
-    post-install:
-      # Automatically add build version and date into AppData
-      - |
-        set -e
-        VERSION=$(git describe --tags | sed -e 's/^[vV]//' -e 's/_Linux$//')
-        DATE=$(date -d @$(git show -s --format=%ct) +'%Y-%m-%d')
-        sed \
-          -e "s/@VERSION@/${VERSION}/g" \
-          -e "s/@DATE@/${DATE}/g" \
-          -i /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
+      - cmake -DVCPKG_ROOT='vcpkg' -S 'desktop' -B 'build_dir' -DCMAKE_BUILD_TYPE=Release
+      - cmake --build 'build_dir' --target MEGAsync
+      - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
     sources:
       - type: git
+        url: https://github.com/microsoft/vcpkg.git
+        tag: 2024.07.12
+        commit: 1de2026f28ead93ff1773e6e680387643e914ea1
+        dest: 'vcpkg'
+      - type: git
         url: https://github.com/meganz/MEGAsync.git
-        tag: v5.2.1.0_Linux
-        commit: 9937e808ba7eb87949c1d7a15e9b8e122b7ba410
+        tag: v5.4.0.0_Linux
+        commit: 1057c438ccedafcec8f3b2dac7b3c3cfd6d9d07f
+        dest: 'desktop'
         x-checker-data:
           type: json
           url: https://api.github.com/repos/meganz/MEGAsync/releases
@@ -78,144 +55,11 @@ modules:
           version-query: $tag | sub("^v"; "") | sub("_Linux$"; "")
           timestamp-query: map(select(.tag_name==$tag)) | first | .published_at
           is-main-source: true
-      - type: shell
-        dest: src/MEGASync
-        commands:
-          - sed -i 's/lessThan(GCC_VERSION, 5)/greaterThan(GCC_VERSION, 5)/' MEGASync.pro
-          - sed -i '/DEFINES += REQUIRE_HAVE_PDFIUM/d' MEGASync.pro
-      # https://github.com/meganz/MEGAsync/pull/510
       - type: patch
-        path: patches/0001-feat-add-AppData-manifest.patch
-      - type: patch
-        path: patches/010-megasync-libpdfium.patch
-        options:
-          - -d
-          - src/MEGASync/mega
-      - type: patch
-        path: patches/020-megasync-ffmpeg.patch
-        options:
-          - -d
-          - src/MEGASync/mega
-    modules:
-
-      - name: cryptopp
-        no-autogen: true
-        make-args:
-          - shared
-        install-rule: install-lib
-        make-install-args:
-          - PREFIX=/app
-          - LIBDIR=/app/lib
-        build-options:
-          # Generally speaking, you should not use Link Time Optimization for
-          # Crypto++. There are three reasons for the recommendation. First, we
-          # don't want the linker changing object files or the executables
-          # produced during link. The linker's job is to combine object files,
-          # not attempt to peephole optimize them.
-          # https://www.cryptopp.com/wiki/Link_Time_Optimization
-          cflags: -fno-lto
-          cxxflags: -fno-lto
-        sources:
-          - type: git
-            url: https://github.com/weidai11/cryptopp.git
-            tag: CRYPTOPP_8_9_0
-            commit: 843d74c7c97f9e19a615b8ff3c0ca06599ca501b
-            x-checker-data:
-              type: json
-              url: https://api.github.com/repos/weidai11/cryptopp/releases/latest
-              tag-query: .tag_name
-              version-query: .tag_name
-              timestamp-query: .published_at
-        cleanup:
-          - /bin
-          - /share
-
-      - name: c-ares
-        buildsystem: cmake-ninja
-        sources:
-          - type: git
-            url: https://github.com/c-ares/c-ares.git
-            tag: v1.32.1
-            sha256: 63be2c4ee121faa47e9766f735b4cde750fff2c563f81c11e572d3dc6401e5e7
-            x-checker-data:
-              type: json
-              url: https://api.github.com/repos/c-ares/c-ares/releases/latest
-              tag-query: .tag_name
-              version-query: .tag_name
-              timestamp-query: .published_at
-        cleanup:
-          - /bin
-
-      - name: freeimage
-        subdir: FreeImage/trunk
-        no-autogen: true
-        build-options:
-          arch:
-            aarch64:
-              cflags: -fPIC
-              cxxflags: -fPIC -std=c++11
-            x86_64:
-              cxxflags: -std=c++11
-        make-install-args:
-          - DESTDIR=/app
-          - INCDIR=/app/include
-          - INSTALLDIR=/app/lib
-        sources:
-          - type: svn
-            url: https://svn.code.sf.net/p/freeimage/svn/
-            revision: r1907
-          - type: patch
-            path: patches/freeimage-makefile-install.patch
-
-      - name: libsodium
-        sources:
-          - type: git
-            url: https://github.com/jedisct1/libsodium.git
-            tag: 1.0.20-RELEASE
-            commit: 9511c982fb1d046470a8b42aa36556cdb7da15de
-            x-checker-data:
-              type: json
-              url: https://api.github.com/repos/jedisct1/libsodium/releases/latest
-              tag-query: .tag_name
-              version-query: .tag_name
-              timestamp-query: .published_at
-
-      - name: libmediainfo
-        buildsystem: cmake-ninja
-        subdir: Project/CMake
-        builddir: true
-        sources:
-          - type: archive
-            url: https://old.mediaarea.net/download/source/libmediainfo/24.06/libmediainfo_24.06.tar.xz
-            sha256: 0683f28a2475dc2417205ba528debccc407da4d9fa6516eb4b75b3ff7244e96e
-        modules:
-
-          - name: libzen
-            buildsystem: cmake-ninja
-            subdir: Project/CMake
-            builddir: true
-            sources:
-              - type: archive
-                url: https://old.mediaarea.net/download/source/libzen/0.4.41/libzen_0.4.41.tar.xz
-                sha256: 933bad3b7ecd29dc6bdc88a83645c83dfd098c15b0b90d6177a37fa1536704e8
-
-      - name: libuv
-        sources:
-          - type: archive
-            url: https://dist.libuv.org/dist/v1.48.0/libuv-v1.48.0.tar.gz
-            sha256: 7f1db8ac368d89d1baf163bac1ea5fe5120697a73910c8ae6b2fffb3551d59fb
-
-      - name: LibRaw
-        config-opts:
-          - --disable-examples
-          - --disable-static
-        sources:
-          - type: archive
-            url: https://www.libraw.org/data/LibRaw-0.21.2.tar.gz
-            sha256: fe7288013206854baf6e4417d0fb63ba4ed7227bf36fff021992671c2dd34b03
-        cleanup:
-          - /bin
-
+        paths:
+          - patches/0010-build-patch-for-MEGASync.pro.patch
+          - patches/0020-remove-obsolete-ffmpeg-macros.patch
+          - patches/0030-set-DontUseNativeDialog-true.patch
   - name: xrdb
     sources:
       - type: archive
@@ -226,7 +70,6 @@ modules:
           url: https://www.x.org/releases/individual/app/
           pattern: (xrdb-(\d\.\d+\.?\d*).tar.gz)
     modules:
-
       - name: libXmu
         sources:
           - type: archive
