@@ -1,0 +1,33 @@
+--- a/src/MEGASync/gui/MultiQFileDialog.cpp
++++ b/src/MEGASync/gui/MultiQFileDialog.cpp
+@@ -14,7 +14,7 @@ MultiQFileDialog::MultiQFileDialog(QWidget *parent, const QString &caption, cons
+       mMultiSelect(multiSelect),
+       mEnableOkButton(false)
+ {
+-    setOption(QFileDialog::DontUseNativeDialog, false);
++    setOption(QFileDialog::DontUseNativeDialog, true);
+ 
+     if (multiSelect)
+     {
+diff --git a/src/MEGASync/platform/AbstractPlatform.cpp b/src/MEGASync/platform/AbstractPlatform.cpp
+index 5f70b1c924..40fc5b09d3 100644
+--- a/src/MEGASync/platform/AbstractPlatform.cpp
++++ b/src/MEGASync/platform/AbstractPlatform.cpp
+@@ -138,7 +138,7 @@ void AbstractPlatform::fileSelector(const SelectorInfo &info)
+     fileDialog->setWindowTitle(info.title);
+     fileDialog->setDirectory(defaultDir);
+     fileDialog->setOption(QFileDialog::DontResolveSymlinks, true);
+-    fileDialog->setOption(QFileDialog::DontUseNativeDialog, false);
++    fileDialog->setOption(QFileDialog::DontUseNativeDialog, true);
+     if(info.multiSelection)
+     {
+         fileDialog->setFileMode(QFileDialog::ExistingFiles);
+@@ -182,7 +182,7 @@ void AbstractPlatform::folderSelector(const SelectorInfo &info)
+         fileDialog->setWindowTitle(info.title);
+         fileDialog->setDirectory(defaultDir);
+         fileDialog->setOption(QFileDialog::DontResolveSymlinks, true);
+-        fileDialog->setOption(QFileDialog::DontUseNativeDialog, false);
++        fileDialog->setOption(QFileDialog::DontUseNativeDialog, true);
+         fileDialog->setOption(QFileDialog::ShowDirsOnly, true);
+         fileDialog->setFileMode(QFileDialog::Directory);
+         //Orphan native dialogs must be modal in Windows and Linux. On macOS this method has its own implementation.
