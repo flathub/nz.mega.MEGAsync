@@ -9,8 +9,6 @@
  
      if (multiSelect)
      {
-diff --git a/src/MEGASync/platform/AbstractPlatform.cpp b/src/MEGASync/platform/AbstractPlatform.cpp
-index 5f70b1c924..40fc5b09d3 100644
 --- a/src/MEGASync/platform/AbstractPlatform.cpp
 +++ b/src/MEGASync/platform/AbstractPlatform.cpp
 @@ -138,7 +138,7 @@ void AbstractPlatform::fileSelector(const SelectorInfo &info)
