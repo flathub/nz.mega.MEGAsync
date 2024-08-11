@@ -33,6 +33,7 @@ modules:
     build-options:
       env:
         DESKTOP_DESTDIR: /app
+        LD_LIBRARY_PATH: /app/lib
     build-commands:
       - cmake -B 'build_dir' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
