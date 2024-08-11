@@ -51,9 +51,9 @@ modules:
           is-main-source: true
       - type: patch
         paths:
-          - patches/0010-build-patch-for-MEGASync.pro.patch
-          - patches/0020-remove-obsolete-ffmpeg-macros.patch
-          - patches/0030-set-DontUseNativeDialog-true.patch
+          - patches/0020-build-patch-for-MEGASync.pro.patch
+          - patches/0030-remove-obsolete-ffmpeg-macros.patch
+          - patches/0040-set-DontUseNativeDialog-true.patch
     modules:
       - name: cryptopp
         no-autogen: true
@@ -120,7 +120,7 @@ modules:
             url: https://svn.code.sf.net/p/freeimage/svn/
             revision: r1907
           - type: patch
-            path: patches/freeimage-makefile-install.patch
+            path: patches/0010-freeimage-makefile-install.patch
       - name: libsodium
         sources:
           - type: git
