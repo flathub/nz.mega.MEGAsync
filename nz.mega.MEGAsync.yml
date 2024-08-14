@@ -34,10 +34,32 @@ modules:
       env:
         DESKTOP_DESTDIR: /app
     build-commands:
+      - find . -type f -name 'portfile.cmake' -exec sed -i 's|vcpkg_from_github|vcpkg_from_git|g;s|^(\w*)REPO(\w+)|\1URL local\/|g' {} +;
+      - chmod +x vcpkg/vcpkg
       - cmake -DVCPKG_ROOT='vcpkg' -S 'desktop' -B 'build_dir' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
       - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
     sources:
+      - type: git
+        url: https://github.com/microsoft/vcpkg.git
+        tag: 2024.07.12
+        commit: 1de2026f28ead93ff1773e6e680387643e914ea1
+        dest: vcpkg
+      - type: file
+        url: https://github.com/microsoft/vcpkg-tool/releases/download/2024-07-10/vcpkg-glibc
+        sha256: cdf7fdeb1327e20e2a47a6f7c9ec16999ebe29f417a9a673a80ac92c8b4d4243
+        dest: vcpkg
+        dest-filename: vcpkg
+      - type: git
+        url: https://github.com/c-ares/c-ares.git
+        tag: v1.33.0
+        commit: caffa5ffb3826cf0926405793361bbad11db3268
+        dest: local/c-ares/c-ares
+      - type: git
+        url: https://github.com/MediaArea/MediaInfoLib.git
+        tag: v24.06
+        commit: 547f070e74f1054ebd8ef17e36f8e9d7b6e53e92
+        dest: local/MediaArea/MediaInfoLib
       - type: git
         url: https://github.com/meganz/MEGAsync.git
         tag: v5.4.0.0_Linux
@@ -54,39 +76,6 @@ modules:
           - patches/0020-build-patch-for-MEGASync.pro.patch
           - patches/0030-remove-obsolete-ffmpeg-macros.patch
           - patches/0040-set-DontUseNativeDialog-true.patch
-    modules:
-      - name: vcpkg
-        buildsystem: simple
-        build-commands:
-          - find . -type f -name 'portfile.cmake' -exec sed -i 's|vcpkg_from_github|vcpkg_from_git|g;s|^(\w*)REPO(\w+)|\1URL local\/|g' {} +;
-          - chmod +x vcpkg/vcpkg
-        sources:
-          - type: git
-            url: https://github.com/microsoft/vcpkg.git
-            tag: 2024.07.12
-            commit: 1de2026f28ead93ff1773e6e680387643e914ea1
-            dest: vcpkg
-          - type: file
-            url: https://github.com/microsoft/vcpkg-tool/releases/download/2024-07-10/vcpkg-glibc
-            sha256: cdf7fdeb1327e20e2a47a6f7c9ec16999ebe29f417a9a673a80ac92c8b4d4243
-            dest: vcpkg
-            dest-filename: vcpkg
-      - name: c-ares
-        buildsystem: simple
-        sources:
-          - type: git
-            url: https://github.com/c-ares/c-ares.git
-            tag: v1.33.0
-            commit: caffa5ffb3826cf0926405793361bbad11db3268
-            dest: local/c-ares/c-ares
-      - name: libmediainfo
-        buildsystem: simple
-        sources:
-          - type: git
-            url: https://github.com/MediaArea/MediaInfoLib.git
-            tag: v24.06
-            commit: 547f070e74f1054ebd8ef17e36f8e9d7b6e53e92
-            dest: local/MediaArea/MediaInfoLib
   - name: xrdb
     sources:
       - type: archive
