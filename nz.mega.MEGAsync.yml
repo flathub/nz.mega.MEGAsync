@@ -43,7 +43,7 @@ modules:
       - type: git
         url: https://github.com/microsoft/vcpkg.git
         tag: 2024.07.12
-        commit: 7476f0d4e77d3333fbb249657df8251c28c4faae
+        commit: 1de2026f28ead93ff1773e6e680387643e914ea1
         dest: vcpkg
       - type: file
         url: https://github.com/microsoft/vcpkg-tool/releases/download/2024-07-10/vcpkg-glibc
