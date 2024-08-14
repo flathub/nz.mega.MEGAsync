@@ -34,7 +34,7 @@ modules:
       env:
         DESKTOP_DESTDIR: /app
     build-commands:
-      - find . -type f -name 'portfile.cmake' -exec sed -i 's|vcpkg_from_github|vcpkg_from_git|g;s/^(\\s*)REPO(\\s+)/\\1URL local\//g' {} +;
+      - find . -type f -name 'portfile.cmake' -exec sed -i 's|vcpkg_from_github|vcpkg_from_git|g;s|REPO |URL |g' {} +;
       - chmod +x vcpkg/vcpkg
       - cmake -DVCPKG_ROOT='vcpkg' -S 'desktop' -B 'build_dir' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
@@ -54,12 +54,22 @@ modules:
         url: https://github.com/c-ares/c-ares.git
         tag: v1.33.0
         commit: caffa5ffb3826cf0926405793361bbad11db3268
-        dest: local/c-ares/c-ares
+        dest: c-ares/c-ares
+      - type: git
+        url: https://github.com/abdes/cryptopp-cmake.git
+        tag: CRYPTOPP_8_9_0
+        commit: f815f6284684be6ab03af4b6c273359331c61241
+        dest: abdes/cryptopp-cmake
+      - type: git
+        url: https://github.com/weidai11/cryptopp.git
+        tag: CRYPTOPP_8_9_0
+        commit: 843d74c7c97f9e19a615b8ff3c0ca06599ca501b
+        dest: weidai11/cryptopp
       - type: git
         url: https://github.com/MediaArea/MediaInfoLib.git
         tag: v24.06
         commit: 547f070e74f1054ebd8ef17e36f8e9d7b6e53e92
-        dest: local/MediaArea/MediaInfoLib
+        dest: MediaArea/MediaInfoLib
       - type: git
         url: https://github.com/meganz/MEGAsync.git
         tag: v5.4.0.0_Linux
