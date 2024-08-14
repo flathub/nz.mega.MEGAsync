@@ -64,6 +64,7 @@ modules:
         url: https://github.com/meganz/MEGAsync.git
         tag: v5.4.0.0_Linux
         commit: 1057c438ccedafcec8f3b2dac7b3c3cfd6d9d07f
+        dest: desktop
         x-checker-data:
           type: json
           url: https://api.github.com/repos/meganz/MEGAsync/releases
