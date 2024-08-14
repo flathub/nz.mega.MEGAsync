@@ -72,16 +72,13 @@ modules:
           version-query: $tag | sub("^v"; "") | sub("_Linux$"; "")
           timestamp-query: map(select(.tag_name==$tag)) | first | .published_at
           is-main-source: true
-      - type: shell
-        dest: desktop
-        commands:
-          - sed -i 's/7476f0d4e77d3333fbb249657df8251c28c4faae/1de2026f28ead93ff1773e6e680387643e914ea1/g' vcpkg.json
       - type: patch
         dest: desktop
         paths:
           - patches/0020-build-patch-for-MEGASync.pro.patch
           - patches/0030-remove-obsolete-ffmpeg-macros.patch
           - patches/0040-set-DontUseNativeDialog-true.patch
+          - patches/0050-remove-version-constraints.patch
   - name: xrdb
     sources:
       - type: archive
