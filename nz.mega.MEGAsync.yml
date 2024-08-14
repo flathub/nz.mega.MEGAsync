@@ -73,6 +73,7 @@ modules:
           timestamp-query: map(select(.tag_name==$tag)) | first | .published_at
           is-main-source: true
       - type: patch
+        dest: desktop
         paths:
           - patches/0020-build-patch-for-MEGASync.pro.patch
           - patches/0030-remove-obsolete-ffmpeg-macros.patch
