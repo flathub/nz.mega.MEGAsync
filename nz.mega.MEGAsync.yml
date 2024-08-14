@@ -75,7 +75,7 @@ modules:
       - type: shell
         dest: desktop
         commands:
-          - sed -i '/builtin-baseline/d;s/version>=/version/g' vcpkg.json
+          - sed -i 's/7476f0d4e77d3333fbb249657df8251c28c4faae/1de2026f28ead93ff1773e6e680387643e914ea1/g' vcpkg.json
       - type: patch
         dest: desktop
         paths:
