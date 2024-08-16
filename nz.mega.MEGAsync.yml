@@ -34,7 +34,7 @@ modules:
       env:
         DESKTOP_DESTDIR: /app
     build-commands:
-      - find . -type f -name 'portfile.cmake' -exec sed -E '/^\s*vcpkg_from_.+/d;/^\s*(OUT_SOURCE_PATH|REF|SHA512|HEAD_REF|GITHUB_HOST|AUTHORIZATION_TOKEN|FILE_DISAMBIGUATION|GITLAB_URL|FILENAME|NO_REMOV^E_ONE_LEVEL)\s+/d;s/^\s*REPO\s+(.+)\s*$/set(SOURCE_PATH, "\1")/g;s/^((\s*)PATCHES.*)$/vcpkg_apply_patches(\n\2SOURCE_PATH\n\1/g' {} +;
+      - find . -type f -name 'portfile.cmake' -exec sed -i -E '/^\s*vcpkg_from_.+/d;/^\s*(OUT_SOURCE_PATH|REF|SHA512|HEAD_REF|GITHUB_HOST|AUTHORIZATION_TOKEN|FILE_DISAMBIGUATION|GITLAB_URL|FILENAME|NO_REMOV^E_ONE_LEVEL)\s+/d;s/^\s*REPO\s+(.+)\s*$/set(SOURCE_PATH, "\1")/g;s/^((\s*)PATCHES.*)$/vcpkg_apply_patches(\n\2SOURCE_PATH\n\1/g' {} +;
       - chmod +x vcpkg/vcpkg
       - cmake -DVCPKG_ROOT='vcpkg' -S 'desktop' -B 'build_dir' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
