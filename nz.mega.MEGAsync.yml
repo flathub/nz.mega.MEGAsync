@@ -58,7 +58,7 @@ modules:
       - type: shell
         commands:
           - chmod +x vcpkg/vcpkg
-          - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "vcpkg/$2")\nvcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' {} +;
+          # - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "vcpkg/$2")\nvcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' {} +;
           - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "vcpkg/$2")' {} +;
       - type: git
         url: https://github.com/c-ares/c-ares.git
