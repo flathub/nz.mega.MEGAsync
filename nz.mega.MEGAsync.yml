@@ -34,7 +34,7 @@ modules:
       env:
         DESKTOP_DESTDIR: /app
     build-commands:
-      - find . -type f -name 'portfile.cmake' -exec sed -i -E -z 's/(vcpkg_from_.+?\(.*?OUT_SOURCE_PATH\s+(\S+).*?REPO\s+(\S+).*?PATCHES\s+(.+?)\))/set(\2 "\3")\nvcpkg_apply_patches(\n\2 ${\2}\n\PATCHES\n\4)/g;' {} +;
+      - find . -type f -name 'portfile.cmake' -exec sh -c "cat {} | ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1, "$2")\nvcpkg_apply_patches(\nSOURCE $${$1}\n$3)' | ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1, \"$2\")' > {}" +;
       - chmod +x vcpkg/vcpkg
       - cmake -DVCPKG_ROOT='vcpkg' -S 'desktop' -B 'build_dir' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
@@ -50,6 +50,12 @@ modules:
         sha256: cdf7fdeb1327e20e2a47a6f7c9ec16999ebe29f417a9a673a80ac92c8b4d4243
         dest: vcpkg
         dest-filename: vcpkg
+      - type: file
+        url: https://github.com/chmln/sd/releases/download/v1.0.0/sd-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
+        sha256sum: 297202d8cc09cb65c9d7afdfc3f23146371d0c7d7d3448cecab11685d47c709a
+      - type: script
+        commands:
+          - tar -zxvf sd-v1.0.0-x86_64-unknown-linux-gnu.tar.gz --strip-components=1 sd-v1.0.0-x86_64-unknown-linux-gnu/sd
       - type: git
         url: https://github.com/c-ares/c-ares.git
         tag: v1.33.0
