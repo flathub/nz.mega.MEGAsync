@@ -53,7 +53,7 @@ modules:
       - type: file
         url: https://github.com/chmln/sd/releases/download/v1.0.0/sd-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
         sha256sum: 297202d8cc09cb65c9d7afdfc3f23146371d0c7d7d3448cecab11685d47c709a
-      - type: script
+      - type: shell
         commands:
           - tar -zxvf sd-v1.0.0-x86_64-unknown-linux-gnu.tar.gz --strip-components=1 sd-v1.0.0-x86_64-unknown-linux-gnu/sd
       - type: git
