@@ -60,7 +60,7 @@ modules:
           - chmod +x vcpkg/vcpkg
           - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "$2")\nvcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' {} +;
           - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "$2")' {} +;
-          - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_cmake_configure' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nvcpkg_cmake_configure' {} +;
+          - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_cmake_configure\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nvcpkg_cmake_configure' {} +;
       - type: git
         url: https://github.com/c-ares/c-ares.git
         tag: v1.33.0
