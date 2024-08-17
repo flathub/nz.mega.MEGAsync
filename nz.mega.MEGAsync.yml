@@ -58,28 +58,28 @@ modules:
       - type: shell
         commands:
           - chmod +x vcpkg/vcpkg
-          # - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "$2")\nvcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' {} +;
-          - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "$2")' {} +;
+          - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "vcpkg/$2")\nvcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' {} +;
+          - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "vcpkg/$2")' {} +;
       - type: git
         url: https://github.com/c-ares/c-ares.git
         tag: v1.33.0
         commit: caffa5ffb3826cf0926405793361bbad11db3268
-        dest: c-ares/c-ares
+        dest: vcpkg/c-ares/c-ares
       - type: git
         url: https://github.com/abdes/cryptopp-cmake.git
         tag: CRYPTOPP_8_9_0
         commit: f815f6284684be6ab03af4b6c273359331c61241
-        dest: abdes/cryptopp-cmake
+        dest: vcpkg/abdes/cryptopp-cmake
       - type: git
         url: https://github.com/weidai11/cryptopp.git
         tag: CRYPTOPP_8_9_0
         commit: 843d74c7c97f9e19a615b8ff3c0ca06599ca501b
-        dest: weidai11/cryptopp
+        dest: vcpkg/weidai11/cryptopp
       - type: git
         url: https://github.com/MediaArea/MediaInfoLib.git
         tag: v24.06
         commit: 547f070e74f1054ebd8ef17e36f8e9d7b6e53e92
-        dest: MediaArea/MediaInfoLib
+        dest: vcpkg/MediaArea/MediaInfoLib
       - type: git
         url: https://github.com/meganz/MEGAsync.git
         tag: v5.4.0.0_Linux
