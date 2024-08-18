@@ -78,7 +78,9 @@ modules:
           - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_cmake_configure\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nvcpkg_cmake_configure(' {} +;
           - find . -type f -name '*.cmake' -exec ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' {} +;
           - find . -type f -name '*.cmake' -exec ./sd -f m '\$\{PATCHELF\}' 'patchelf' {} +;
-      
+      # Add the vcpkg overlay ports for system packages
+      - type: dir
+        path: overlays
 
       - type: git
         url: https://github.com/c-ares/c-ares.git
