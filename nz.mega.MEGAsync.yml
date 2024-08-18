@@ -55,14 +55,17 @@ modules:
         dest-filename: patchelf.tar.gz
       - type: shell
         commands:
-          - tar -zxvf patchelf.tar.gz --strip-components=1 --wildcards bin/patchelf
-          - chmod +x sd
+          - tar -zxvf patchelf.tar.gz --strip-components=2 ./bin/patchelf
+          - chmod +x patchelf
+          - cp patchelf /bin
       
+      # Download vcpkg which contains the cmake and portfiles of dependencies
       - type: git
         url: https://github.com/microsoft/vcpkg.git
         tag: 2024.07.12
         commit: 1de2026f28ead93ff1773e6e680387643e914ea1
         dest: vcpkg
+      # Download vcpkg-tool which will be used by vcpkg-cmake
       - type: file
         url: https://github.com/microsoft/vcpkg-tool/releases/download/2024-07-10/vcpkg-glibc
         sha256: cdf7fdeb1327e20e2a47a6f7c9ec16999ebe29f417a9a673a80ac92c8b4d4243
@@ -75,6 +78,9 @@ modules:
           - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "$2")' {} +;
           - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_cmake_configure\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nvcpkg_cmake_configure(' {} +;
           - find . -type f -name '*.cmake' -exec ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' {} +;
+          - find . -type f -name '*.cmake' -exec ./sd -f m '\${PATCHELF}' 'patchelf' {} +;
+      
+
       - type: git
         url: https://github.com/c-ares/c-ares.git
         tag: v1.33.0
