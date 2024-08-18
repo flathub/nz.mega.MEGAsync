@@ -77,7 +77,7 @@ modules:
           - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "$2")' {} +;
           - find . -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_cmake_configure\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nvcpkg_cmake_configure(' {} +;
           - find . -type f -name '*.cmake' -exec ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' {} +;
-          - find . -type f -name '*.cmake' -exec ./sd -f m '\${PATCHELF}' 'patchelf' {} +;
+          - find . -type f -name '*.cmake' -exec ./sd -f m '\$\{PATCHELF\}' 'patchelf' {} +;
       
 
       - type: git
