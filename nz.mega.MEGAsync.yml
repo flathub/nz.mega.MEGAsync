@@ -57,7 +57,6 @@ modules:
         commands:
           - tar -zxvf patchelf.tar.gz --strip-components=2 ./bin/patchelf
           - chmod +x patchelf
-          - cp patchelf /usr/bin
       
       # Download vcpkg which contains the cmake and portfiles of dependencies
       - type: git
