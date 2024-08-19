@@ -164,9 +164,15 @@ modules:
         dest: vcpkg/downloads/tukaani-project/xz
 
       - type: git
+        url: https://github.com/ebiggers/libdeflate.git
+        tag: v1.20
+        commit: 275aa5141db6eda3587214e0f1d3a134768f557d
+        dest: vcpkg/downloads/ebiggers/libdeflate
+
+      - type: git
         url: https://github.com/meganz/MEGAsync.git
-        tag: v5.4.0.0_Linux
-        commit: 1057c438ccedafcec8f3b2dac7b3c3cfd6d9d07f
+        tag: v5.4.1.0_Linux
+        commit: 243d77ebb7239d7ff5cd8b7aea6c0158d1c6c813
         dest: desktop
         x-checker-data:
           type: json
