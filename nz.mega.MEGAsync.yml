@@ -83,10 +83,18 @@ modules:
           - find vcpkg/ports -type f -name 'portfile.cmake' -exec ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' {} +;
           - find . -type f -name '*.cmake' -exec ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' {} +;
           - find . -type f -name '*.cmake' -exec ./sd -f m '\$\{PATCHELF\}' 'patchelf' {} +;
+          - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
       # Add the vcpkg overlay ports for system packages
       - type: dir
         path: overlays
         dest: overlays
+
+      # Download meson as required by vcpkg-tool-meson
+      - type: file
+        url: https://github.com/mesonbuild/meson/archive/614d436232d3a86518164cbe2b8af12db3bde009.tar.gz
+        sha256: e095d994ad3ae6a5b734cc6c7ef2375d6f72c4690b71b19d058b227a711c1ce7
+        dest: vcpkg/downloads
+        dest-filename: meson.tar.gz
 
       - type: git
         url: https://github.com/c-ares/c-ares.git
