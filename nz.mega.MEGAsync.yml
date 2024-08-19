@@ -146,6 +146,24 @@ modules:
         dest: vcpkg/downloads/MediaArea/MediaInfoLib
 
       - type: git
+        url: https://github.com/leethomason/tinyxml2.git
+        tag: 10.0.0
+        commit: 321ea883b7190d4e85cae5512a12e5eaa8f8731f
+        dest: vcpkg/downloads/leethomason/tinyxml2
+
+      - type: git
+        url: https://github.com/MediaArea/ZenLib.git
+        tag: v0.4.41
+        commit: 894980d3ecbc843d6ac685493f8f2ed5c2b6864c
+        dest: vcpkg/downloads/MediaArea/ZenLib
+
+      - type: git
+        url: https://github.com/tukaani-project/xz.git
+        tag: v5.6.2
+        commit: 3ec664d3f652133136587a51d4505b1abe1acdd7
+        dest: vcpkg/downloads/tukaani-project/xz
+
+      - type: git
         url: https://github.com/meganz/MEGAsync.git
         tag: v5.4.0.0_Linux
         commit: 1057c438ccedafcec8f3b2dac7b3c3cfd6d9d07f
