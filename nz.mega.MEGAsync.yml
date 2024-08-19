@@ -96,6 +96,13 @@ modules:
         dest: vcpkg/downloads
         dest-filename: meson.tar.gz
 
+      # Download pkgconf as required by MEGAsync for build
+      - type: git
+        url: https://github.com/pkgconf/pkgconf.git
+        tag: pkgconf-2.2.0
+        commit: 06120a8769aed87d50e914f87a6f9f67110cf16e
+        dest: vcpkg/downloads/pkgconf/pkgconf
+
       - type: git
         url: https://github.com/c-ares/c-ares.git
         tag: v1.33.0
