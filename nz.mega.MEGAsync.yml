@@ -120,8 +120,8 @@ modules:
 
       - type: git
         url: https://github.com/libuv/libuv.git
-        tag: v1.48.0
-        commit: e9f29cb984231524e3931aa0ae2c5dae1a32884e
+        tag: v1.46.0
+        commit: f0bb7e40f0508bedf6fad33769b3f87bb8aedfa6
         dest: vcpkg/downloads/libuv/libuv
 
       - type: git
