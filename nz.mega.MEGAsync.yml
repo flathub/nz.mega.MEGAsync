@@ -44,24 +44,26 @@ modules:
       - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
     sources:
       # Use sd instead of sed for better regex multiline matching
-      - type: file
+      - type: archive
         url: https://github.com/chmln/sd/releases/download/v1.0.0/sd-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
         sha256: 297202d8cc09cb65c9d7afdfc3f23146371d0c7d7d3448cecab11685d47c709a
-        dest-filename: sd.tar.gz
-      - type: shell
-        commands:
-          - tar -zxvf sd.tar.gz --strip-components=1 --wildcards sd*/sd
-          - chmod +x sd
+        strip-components: 1
+      #  dest-filename: sd.tar.gz
+      #- type: shell
+      #  commands:
+      #    - tar -zxvf sd.tar.gz --strip-components=1 --wildcards sd*/sd
+      #    - chmod +x sd
       
       # Download patchelf as required by vcpkg_find_acquire_program(PATCHELF)
-      - type: file
+      - type: archive
         url: https://github.com/NixOS/patchelf/releases/download/0.14.5/patchelf-0.14.5-x86_64.tar.gz
         sha256: 514bb05d8f0e41ea0a6cb999041acb6aa386662e9ccdbdfbbfca469fb22d44fa
-        dest-filename: patchelf.tar.gz
-      - type: shell
-        commands:
-          - tar -zxvf patchelf.tar.gz --strip-components=2 ./bin/patchelf
-          - chmod +x patchelf
+        strip-components: 2
+      #  dest-filename: patchelf.tar.gz
+      #- type: shell
+      #  commands:
+      #    - tar -zxvf patchelf.tar.gz --strip-components=2 ./bin/patchelf
+      #    - chmod +x patchelf
       
       # Download vcpkg which contains the cmake and portfiles of dependencies
       - type: git
