@@ -162,6 +162,36 @@ modules:
         dest: vcpkg/downloads/ebiggers/libdeflate
 
       - type: git
+        url: https://github.com/AcademySoftwareFoundation/Imath.git
+        tag: v3.1.11
+        commit: 5ac1d5335cb34f0f356c5f2461a57c845b96b115
+        dest: vcpkg/downloads/AcademySoftwareFoundation/Imath
+
+      - type: git
+        url: https://github.com/AcademySoftwareFoundation/openexr.git
+        tag: v3.2.4
+        commit: a1a00ffeecf627bbbc010d40700720bee48b2af7
+        dest: vcpkg/downloads/AcademySoftwareFoundation/openexr
+
+      - type: git
+        url: https://github.com/LibRaw/LibRaw.git
+        tag: 0.21.2
+        commit: 1ef70158d7fde1ced6aaddb0b9443c32a7121d3d
+        dest: vcpkg/downloads/LibRaw/LibRaw
+
+      - type: git
+        url: https://github.com/4creators/jxrlib.git
+        tag: v2019.10.9
+        commit: f7521879862b9085318e814c6157490dd9dbbdb4
+        dest: vcpkg/downloads/4creators/jxrlib
+
+      - type: git
+        url: https://github.com/jasper-software/jasper.git
+        tag: version-4.2.1
+        commit: 7359c0dfa505c9d710233b8724690a4407c4702d
+        dest: vcpkg/downloads/jasper-software/jasper
+
+      - type: git
         url: https://github.com/meganz/MEGAsync.git
         tag: v5.4.1.0_Linux
         commit: 243d77ebb7239d7ff5cd8b7aea6c0158d1c6c813
