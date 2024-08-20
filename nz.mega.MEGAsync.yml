@@ -88,6 +88,12 @@ modules:
         dest: vcpkg/downloads
         dest-filename: meson.tar.gz
 
+      - type: archive
+        url: https://nchc.dl.sourceforge.net/project/freeimage/Source%20Distribution/3.18.0/FreeImage3180.zip
+        sha256: f41379682f9ada94ea7b34fe86bf9ee00935a3147be41b6569c9605a53e438fd
+        strip-components: 1
+        dest: vcpkg/downloads/freeimage/Source%20Distribution
+
       # Download pkgconf as required by MEGAsync for build
       - type: git
         url: https://github.com/pkgconf/pkgconf.git
@@ -127,8 +133,8 @@ modules:
 
       - type: git
         url: https://github.com/libuv/libuv.git
-        tag: v1.46.0
-        commit: f0bb7e40f0508bedf6fad33769b3f87bb8aedfa6
+        tag: v1.48.0
+        commit: e9f29cb984231524e3931aa0ae2c5dae1a32884e
         dest: vcpkg/downloads/libuv/libuv
 
       - type: git
