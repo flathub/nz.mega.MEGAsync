@@ -42,16 +42,14 @@ modules:
       #- find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' {} +;
       #- find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' {} +;
       #- find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ -type f -name 'portfile.cmake' -exec ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' {} +;
-      - >-
-        find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ -type f -name 'portfile.cmake'
-        -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' '{}' '+'\;
-        -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' '{}' '+'\;
-        -exec ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' '{}' '+'\;
+      - find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ -name 'portfile.cmake' -type f -fprint0 PORTFILES
+      - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' < PORTFILES
+      - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' < PORTFILES
+      - xargs -0 ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' < PORTFILES
       
-      - >-
-        find . -type f -name '*.cmake'
-        -exec ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' '{}' '+'\;
-        -exec ./sd -f m '\$\{PATCHELF\}' 'patchelf' '{}' '+'\;
+      - find . -name '*.cmake' -type f -fprint0 CMAKEFILES
+      - xargs -0 ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' < CMAKEFILES
+      - xargs -0 ./sd -f m '\$\{PATCHELF\}' 'patchelf' < CMAKEFILES
 
       - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
 
