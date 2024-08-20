@@ -97,8 +97,8 @@ modules:
       # Download pkgconf as required by MEGAsync for build
       - type: git
         url: https://github.com/pkgconf/pkgconf.git
-        tag: pkgconf-2.2.0
-        commit: 06120a8769aed87d50e914f87a6f9f67110cf16e
+        tag: pkgconf-2.3.0
+        commit: a88c0d962a987c62d98ede5a738e37ec71005cbd
         dest: vcpkg/downloads/pkgconf/pkgconf
 
       - type: git
@@ -163,8 +163,8 @@ modules:
 
       - type: git
         url: https://github.com/ebiggers/libdeflate.git
-        tag: v1.20
-        commit: 275aa5141db6eda3587214e0f1d3a134768f557d
+        tag: v1.21
+        commit: 9be1c54e6086cd1f9e1e7dece96eb6d1355c93f7
         dest: vcpkg/downloads/ebiggers/libdeflate
 
       - type: git
