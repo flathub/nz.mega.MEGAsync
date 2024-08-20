@@ -84,7 +84,7 @@ modules:
       # Download meson as required by vcpkg-tool-meson
       - type: file
         url: https://github.com/mesonbuild/meson/archive/1.5.1.tar.gz
-        sha256: e095d994ad3ae6a5b734cc6c7ef2375d6f72c4690b71b19d058b227a711c1ce7
+        sha256: 55f6acd5bf72c14d4aa5a781993633f84a1d117bdf2c2057735902ced9b81390
         dest: vcpkg/downloads
         dest-filename: meson.tar.gz
 
