@@ -186,6 +186,12 @@ modules:
         dest: vcpkg/downloads/LibRaw/LibRaw
 
       - type: git
+        url: https://github.com/LibRaw/LibRaw-cmake.git
+        branch: master
+        commit: 6e26c9e73677dc04f9eb236a97c6a4dc225ba7e8
+        dest: vcpkg/downloads/LibRaw/LibRaw-cmake
+
+      - type: git
         url: https://github.com/4creators/jxrlib.git
         tag: v2019.10.9
         commit: f7521879862b9085318e814c6157490dd9dbbdb4
