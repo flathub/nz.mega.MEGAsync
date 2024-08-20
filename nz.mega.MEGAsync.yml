@@ -58,15 +58,13 @@ modules:
       # Download vcpkg which contains the cmake and portfiles of dependencies
       - type: git
         url: https://github.com/microsoft/vcpkg.git
-        #tag: '2024.07.12'
         branch: master
-        #commit: 1de2026f28ead93ff1773e6e680387643e914ea1
         dest: vcpkg
 
       # Download vcpkg-tool which will be used by vcpkg-cmake
       - type: file
-        url: https://github.com/microsoft/vcpkg-tool/releases/download/2024-07-10/vcpkg-glibc
-        sha256: cdf7fdeb1327e20e2a47a6f7c9ec16999ebe29f417a9a673a80ac92c8b4d4243
+        url: https://github.com/microsoft/vcpkg-tool/releases/download/2024-08-01/vcpkg-glibc
+        sha256: da93a3693911c15406e0a9d2562c0db142ee63b77e4268ab55ea9e87b390ec7b
         dest: vcpkg
         dest-filename: vcpkg
       - type: shell
