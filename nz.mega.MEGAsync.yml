@@ -187,7 +187,6 @@ modules:
 
       - type: git
         url: https://github.com/LibRaw/LibRaw-cmake.git
-        branch: master
         commit: 6e26c9e73677dc04f9eb236a97c6a4dc225ba7e8
         dest: vcpkg/downloads/LibRaw/LibRaw-cmake
 
