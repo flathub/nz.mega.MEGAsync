@@ -39,6 +39,19 @@ modules:
       env:
         DESKTOP_DESTDIR: /app
     build-commands:
+      #- find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' {} +;
+      #- find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' {} +;
+      #- find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ -type f -name 'portfile.cmake' -exec ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' {} +;
+      - >-
+      find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ -type f -name 'portfile.cmake'
+      -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' {} +;
+      -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' {} +;
+      -exec ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' {} +;
+      
+      - find . -type f -name '*.cmake' -exec ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' {} +;
+      - find . -type f -name '*.cmake' -exec ./sd -f m '\$\{PATCHELF\}' 'patchelf' {} +;
+      - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
+
       - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DVCPKG_OVERLAY_PORTS='overlays' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
       - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
@@ -70,12 +83,6 @@ modules:
       - type: shell
         commands:
           - chmod +x vcpkg/vcpkg
-          - find vcpkg/ports -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' {} +;
-          - find vcpkg/ports -type f -name 'portfile.cmake' -exec ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?REPO\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' {} +;
-          - find vcpkg/ports -type f -name 'portfile.cmake' -exec ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' {} +;
-          - find . -type f -name '*.cmake' -exec ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' {} +;
-          - find . -type f -name '*.cmake' -exec ./sd -f m '\$\{PATCHELF\}' 'patchelf' {} +;
-          - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
       # Add the vcpkg overlay ports for system packages
       - type: dir
         path: overlays
@@ -181,8 +188,8 @@ modules:
 
       - type: git
         url: https://github.com/LibRaw/LibRaw.git
-        tag: 0.21.1
-        commit: cccb97647fcee56801fa68231fa8a38aa8b52ef7
+        tag: 0.21.2
+        commit: 1ef70158d7fde1ced6aaddb0b9443c32a7121d3d
         dest: vcpkg/downloads/LibRaw/LibRaw
 
       - type: git
