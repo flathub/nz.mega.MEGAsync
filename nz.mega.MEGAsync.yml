@@ -43,6 +43,8 @@ modules:
       - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)+\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' < PORTFILES
       - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' < PORTFILES
       - xargs -0 ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' < PORTFILES
+      
+      - ./sd -f m 'pdfium_from_git\([^\)]+\)' '' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/pdfium/portfile.cmake
       - ./sd -f m 'if\(SOURCE_PATH MATCHES " "\)' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nif(SOURCE_PATH MATCHES " ")' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ffmpeg/portfile.cmake
 
       - find . -name '*.cmake' -type f -fprint0 CMAKEFILES
@@ -201,6 +203,21 @@ modules:
         url: https://github.com/LibRaw/LibRaw-cmake.git
         commit: 6e26c9e73677dc04f9eb236a97c6a4dc225ba7e8
         dest: vcpkg/downloads/LibRaw/LibRaw-cmake
+
+      - type: git
+        url: https://pdfium.googlesource.com/pdfium.git
+        commit: ee44620f2b58999b0d272d58fa0b994d5935f688
+        dest: vcpkg/downloads/ee44620f2b58999b0d272d58fa0b994d5935f688
+
+      - type: git
+        url: https://chromium.googlesource.com/chromium/src/build.git
+        commit: 26f8da34750ac3bccf683ed5f70d86f21c54b22b
+        dest: vcpkg/downloads/ee44620f2b58999b0d272d58fa0b994d5935f688/build
+
+      - type: git
+        url: https://chromium.googlesource.com/chromium/src/third_party/abseil-cpp.git
+        commit: 62a4d6866aeeca02036c510b2f3f286084dd62af
+        dest: vcpkg/downloads/ee44620f2b58999b0d272d58fa0b994d5935f688/third_party/abseil-cpp
 
       - type: git
         url: https://github.com/4creators/jxrlib.git
