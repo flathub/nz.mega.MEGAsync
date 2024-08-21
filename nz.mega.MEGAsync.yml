@@ -49,8 +49,9 @@ modules:
       - xargs -0 ./sd -f m '\$\{PATCHELF\}' 'patchelf' < CMAKEFILES
 
       - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
-
-      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DVCPKG_OVERLAY_PORTS='overlays' -DCMAKE_BUILD_TYPE=Release
+      
+      #-DVCPKG_OVERLAY_PORTS='overlays'
+      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
       - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
     sources:
@@ -83,8 +84,8 @@ modules:
           - chmod +x vcpkg/vcpkg
       # Add the vcpkg overlay ports for system packages
       - type: dir
-        path: overlays
-        dest: overlays
+        path: overlays/*
+        dest: desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports
 
       # Download meson as required by vcpkg-tool-meson
       - type: file
