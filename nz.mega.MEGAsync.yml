@@ -49,9 +49,8 @@ modules:
       - xargs -0 ./sd -f m '\$\{PATCHELF\}' 'patchelf' < CMAKEFILES
 
       - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
-      
-      #-DVCPKG_OVERLAY_PORTS='overlays'
-      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
+
+      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DVCPKG_OVERLAY_PORTS='overlays' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
       - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
     sources:
@@ -84,8 +83,8 @@ modules:
           - chmod +x vcpkg/vcpkg
       # Add the vcpkg overlay ports for system packages
       - type: dir
-        path: overlays/*
-        dest: desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports
+        path: overlays
+        dest: overlays
 
       # Download meson as required by vcpkg-tool-meson
       - type: file
@@ -124,6 +123,12 @@ modules:
         tag: CRYPTOPP_8_9_0
         commit: 843d74c7c97f9e19a615b8ff3c0ca06599ca501b
         dest: vcpkg/downloads/weidai11/cryptopp
+
+      - type: git
+        url: https://github.com/FFmpeg/FFmpeg.git
+        tag: n5.1.2
+        commit: eacfcbae690f914a4b1b4ad06999f138540cc3d8
+        dest: vcpkg/downloads/FFmpeg/FFmpeg
 
       - type: git
         url: https://github.com/jedisct1/libsodium.git
@@ -187,8 +192,8 @@ modules:
 
       - type: git
         url: https://github.com/LibRaw/LibRaw.git
-        tag: 0.21.2
-        commit: 1ef70158d7fde1ced6aaddb0b9443c32a7121d3d
+        tag: 0.21.1
+        commit: cccb97647fcee56801fa68231fa8a38aa8b52ef7
         dest: vcpkg/downloads/LibRaw/LibRaw
 
       - type: git
@@ -201,6 +206,12 @@ modules:
         tag: v2019.10.9
         commit: f7521879862b9085318e814c6157490dd9dbbdb4
         dest: vcpkg/downloads/4creators/jxrlib
+
+      - type: git
+        url: https://github.com/jasper-software/jasper.git
+        tag: version-4.2.1
+        commit: 7359c0dfa505c9d710233b8724690a4407c4702d
+        dest: vcpkg/downloads/jasper-software/jasper
 
       - type: git
         url: https://github.com/jasper-software/jasper.git
