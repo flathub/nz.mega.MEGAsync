@@ -60,6 +60,8 @@ modules:
       - ./sd -f m 'vcpkg_download_distfile\(ARCHIVE[^)]+\)' '' vcpkg/ports/bzip2/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/bzip2")' vcpkg/ports/bzip2/portfile.cmake
 
+      - ./sd -f m '        "\$\{LIBPNG_APNG_PATCH_PATH\}"' '' vcpkg/ports/libpng/portfile.cmake
+
       - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DVCPKG_OVERLAY_PORTS='overlays' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
       - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
