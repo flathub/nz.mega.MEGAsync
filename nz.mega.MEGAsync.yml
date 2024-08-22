@@ -57,8 +57,7 @@ modules:
           if(LCMS2_FOUND)\n+
             set( LCMS2_INCLUDE_DIRS ${LCMS2_INCLUDE_DIR})\n+
             set( LCMS2_LIBRARIES ${LCMS2_LIBRARY} )\n+
-          endif()'
-        desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/libraw/dependencies.patch
+          endif()' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/libraw/dependencies.patch
 
       - find . -name '*.cmake' -type f -fprint0 CMAKEFILES
       - xargs -0 ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' < CMAKEFILES
