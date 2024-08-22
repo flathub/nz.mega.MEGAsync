@@ -250,6 +250,12 @@ modules:
         commit: e88d9bcad79b7ebf6b97ebd634af31ed23c1b910
         dest: vcpkg/downloads/mm2/Little-CMS
 
+      - type: git
+        url: https://github.com/glennrp/libpng.git
+        tag: v.1.6.43
+        commit: ed217e3e601d8e462f7fd1e04bed43ac42212429
+        dest: vcpkg/downloads/glennrp/libpng
+
       - type: archive
         url: https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
         mirror-urls:
