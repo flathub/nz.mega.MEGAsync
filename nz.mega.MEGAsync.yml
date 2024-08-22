@@ -47,8 +47,8 @@ modules:
       - ./sd -f m 'pdfium_from_git\([^\)]+\)' '' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/pdfium/portfile.cmake
       - ./sd -f m 'if\(SOURCE_PATH MATCHES " "\)' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nif(SOURCE_PATH MATCHES " ")' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ffmpeg/portfile.cmake
 
-      - ./sd -f m '\+    find_package\(lcms2 CONFIG REQUIRED\)' '+    find_package(LCMS2)' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/libraw/dependencies.patch
-      - ./sd -f m '\+    set\(LCMS2_' '+    set(XLCMS2_' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/libraw/dependencies.patch
+      # - ./sd -f m '\+    find_package\(lcms2 CONFIG REQUIRED\)' '+    find_package(LCMS2)' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/libraw/dependencies.patch
+      # - ./sd -f m '\+    set\(LCMS2_' '+    set(XLCMS2_' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/libraw/dependencies.patch
       # - ./sd -f m 'WebP CONFIG' 'WebP' vcpkg/ports/freeimage/CMakeLists.txt
       # - cp vcpkg/ports/freeimage/CMakeLists.txt vcpkg/downloads/freeimage/Source%20Distribution
 
@@ -241,6 +241,12 @@ modules:
         tag: v1.4.0
         commit: 845d5476a866141ba35ac133f856fa62f0b7445f
         dest: vcpkg/downloads/webmproject/libwebp
+
+      - type: git
+        url: https://github.com/mm2/Little-CMS.git
+        tag: lcms2.14
+        commit: e88d9bcad79b7ebf6b97ebd634af31ed23c1b910
+        dest: vcpkg/downloads/mm2/Little-CMS
 
       - type: git
         url: https://github.com/meganz/MEGAsync.git
