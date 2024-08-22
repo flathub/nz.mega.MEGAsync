@@ -49,7 +49,7 @@ modules:
 
       - ./sd -f m '\+    find_package\(lcms2 CONFIG REQUIRED\)' '+    find_package(LCMS2)' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/libraw/dependencies.patch
       - ./sd -f m '\+    set\(LCMS2_' '+    set(XLCMS2_' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/libraw/dependencies.patch
-      - ./sd -f m 'WebP CONFIG' 'WebP' vcpkg/ports/freeimage/CMakeLists.txt
+      - ./sd -f m 'WebP CONFIG' 'WebP' vcpkg/ports/freeimage/CMakeLists.txt vcpkg/downloads/freeimage/Source%20Distribution/CMakeLists.txt
 
       - find . -name '*.cmake' -type f -fprint0 CMAKEFILES
       - xargs -0 ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' < CMAKEFILES
