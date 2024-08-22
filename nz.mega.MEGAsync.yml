@@ -252,7 +252,7 @@ modules:
 
       - type: git
         url: https://github.com/glennrp/libpng.git
-        tag: v.1.6.43
+        tag: v1.6.43
         commit: ed217e3e601d8e462f7fd1e04bed43ac42212429
         dest: vcpkg/downloads/glennrp/libpng
 
