@@ -49,8 +49,8 @@ modules:
 
       - ./sd -f m '\+    find_package\(lcms2 CONFIG REQUIRED\)' '+    find_package(LCMS2)' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/libraw/dependencies.patch
       - ./sd -f m '\+    set\(LCMS2_' '+    set(XLCMS2_' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/libraw/dependencies.patch
-      - ./sd -f m 'WebP CONFIG' 'WebP' vcpkg/ports/freeimage/CMakeLists.txt
-      - cp vcpkg/ports/freeimage/CMakeLists.txt vcpkg/downloads/freeimage/Source%20Distribution
+      # - ./sd -f m 'WebP CONFIG' 'WebP' vcpkg/ports/freeimage/CMakeLists.txt
+      # - cp vcpkg/ports/freeimage/CMakeLists.txt vcpkg/downloads/freeimage/Source%20Distribution
 
       - find . -name '*.cmake' -type f -fprint0 CMAKEFILES
       - xargs -0 ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' < CMAKEFILES
@@ -237,10 +237,10 @@ modules:
         dest: vcpkg/downloads/jasper-software/jasper
 
       - type: git
-        url: https://github.com/jasper-software/jasper.git
-        tag: version-4.2.1
-        commit: 7359c0dfa505c9d710233b8724690a4407c4702d
-        dest: vcpkg/downloads/jasper-software/jasper
+        url: https://github.com/webmproject/libwebp.git
+        tag: v1.4.0
+        commit: 845d5476a866141ba35ac133f856fa62f0b7445f
+        dest: vcpkg/downloads/webmproject/libwebp
 
       - type: git
         url: https://github.com/meganz/MEGAsync.git
