@@ -57,7 +57,8 @@ modules:
       - xargs -0 ./sd -f m '\$\{PATCHELF\}' 'patchelf' < CMAKEFILES
 
       - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
-      - ./sd -f m 'vcpkg_download_distfile\(ARCHIVE[^)]+\)' 'set(ARCHIVE "downloads/bzip2.tar.gz")' vcpkg/ports/bzip2/portfile.cmake
+      - ./sd -f m 'vcpkg_download_distfile\(ARCHIVE[^)]+\)' '' vcpkg/ports/bzip2/portfile.cmake
+      - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/bzip2")' vcpkg/ports/bzip2/portfile.cmake
 
       - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DVCPKG_OVERLAY_PORTS='overlays' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
@@ -249,13 +250,13 @@ modules:
         commit: e88d9bcad79b7ebf6b97ebd634af31ed23c1b910
         dest: vcpkg/downloads/mm2/Little-CMS
 
-      - type: file
+      - type: archive
         url: https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
         mirror-urls:
           - https://www.mirrorservice.org/sites/sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
         sha256: ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269
-        dest: vcpkg/downloads
-        dest-filename: bzip2.tar.gz
+        strip-components: 1
+        dest: vcpkg/downloads/bzip2
 
       - type: git
         url: https://github.com/meganz/MEGAsync.git
