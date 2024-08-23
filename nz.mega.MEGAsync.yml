@@ -2,11 +2,6 @@ id: nz.mega.MEGAsync
 sdk: org.kde.Sdk
 runtime: org.kde.Platform
 runtime-version: 5.15-23.08
-add-extensions:
-  org.freedesktop.Platform.ffmpeg-full:
-    directory: lib/ffmpeg
-    version: '23.08'
-    add-ld-path: .
 finish-args:
   - --device=dri
   - --env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons
