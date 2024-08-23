@@ -42,10 +42,10 @@ modules:
       - find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports -name 'portfile.cmake' -type f -fprint0 PORTFILES
       - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?(?:GITLAB_URL\s+[^)]+)*OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' < PORTFILES
       - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?(?:GITLAB_URL\s+[^)]+)*OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' < PORTFILES
-      - xargs -0 ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' < PORTFILES
+      - xargs -0 ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(COPY $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' < PORTFILES
 
       - ./sd -f m 'pdfium_from_git\([^\)]+\)' '' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/pdfium/portfile.cmake
-      - ./sd -f m 'if\(SOURCE_PATH MATCHES " "\)' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nif(SOURCE_PATH MATCHES " ")' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ffmpeg/portfile.cmake
+      - ./sd -f m 'if\(SOURCE_PATH MATCHES " "\)' 'file(COPY $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nif(SOURCE_PATH MATCHES " ")' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ffmpeg/portfile.cmake
 
       - find . -name '*.cmake' -type f -fprint0 CMAKEFILES
       - xargs -0 ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' < CMAKEFILES
@@ -121,6 +121,12 @@ modules:
         tag: pkgconf-2.3.0
         commit: a88c0d962a987c62d98ede5a738e37ec71005cbd
         dest: vcpkg/downloads/pkgconf/pkgconf
+
+      - type: git
+        url: https://github.com/google/brotli.git
+        tag: v1.1.0
+        commit: ed738e842d2fbdf2d6459e39267a633c4a9b2f5d
+        dest: vcpkg/downloads/google/brotli
 
       - type: git
         url: https://github.com/c-ares/c-ares.git
