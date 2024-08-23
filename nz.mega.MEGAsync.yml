@@ -40,8 +40,8 @@ modules:
         DESKTOP_DESTDIR: /app
     build-commands:
       - find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports -name 'portfile.cmake' -type f -fprint0 PORTFILES
-      - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' < PORTFILES
-      - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' < PORTFILES
+      - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?(?:GITLAB_URL\s+[^)]+)*OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' < PORTFILES
+      - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?(?:GITLAB_URL\s+[^)]+)*OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' < PORTFILES
       - xargs -0 ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(RENAME $${SOURCE_PATH} $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' < PORTFILES
 
       - ./sd -f m 'pdfium_from_git\([^\)]+\)' '' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/pdfium/portfile.cmake
@@ -56,6 +56,12 @@ modules:
       - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' vcpkg/ports/ncurses/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/ncurses")' vcpkg/ports/ncurses/portfile.cmake
 
+      - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' vcpkg/ports/icu/portfile.cmake
+      - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/icu")' vcpkg/ports/icu/portfile.cmake
+
+      - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' vcpkg/ports/sqlite3/portfile.cmake
+      - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/sqlite3")' vcpkg/ports/sqlite3/portfile.cmake
+
       - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/readline-unix/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+?(PATCHES\s+[^)]+)\)' 'set(SOURCE_PATH "downloads/readline-unix")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${SOURCE_PATH}"\n$1)' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/readline-unix/portfile.cmake
 
@@ -64,7 +70,7 @@ modules:
 
       - ./sd -f m '        "\$\{LIBPNG_APNG_PATCH_PATH\}"' '' vcpkg/ports/libpng/portfile.cmake
 
-      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DVCPKG_OVERLAY_PORTS='overlays' -DCMAKE_BUILD_TYPE=Release -DEXTRA_ARGS='-DNO_READLINE=1'
+      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
       - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
     sources:
@@ -95,10 +101,6 @@ modules:
       - type: shell
         commands:
           - chmod +x vcpkg/vcpkg
-      # Add the vcpkg overlay ports for system packages
-      - type: dir
-        path: overlays
-        dest: overlays
 
       # Download meson as required by vcpkg-tool-meson
       - type: file
@@ -127,6 +129,12 @@ modules:
         dest: vcpkg/downloads/c-ares/c-ares
 
       - type: git
+        url: https://github.com/curl/curl.git
+        tag: curl-8_9_1
+        commit: 83bedbd730d62b83744cc26fa0433d3f6e2e4cd6
+        dest: vcpkg/downloads/curl/curl
+
+      - type: git
         url: https://github.com/abdes/cryptopp-cmake.git
         tag: CRYPTOPP_8_9_0
         commit: f815f6284684be6ab03af4b6c273359331c61241
@@ -138,11 +146,41 @@ modules:
         commit: 843d74c7c97f9e19a615b8ff3c0ca06599ca501b
         dest: vcpkg/downloads/weidai11/cryptopp
 
+      - type: archive
+        url: https://nchc.dl.sourceforge.net/project/freetype/freetype2/2.13.2/freetype-2.13.2.tar.xz
+        sha256: 12991c4e55c506dd7f9b765933e62fd2be2e06d421505d7950a132e4f1bb484d
+        strip-components: 1
+        dest: vcpkg/downloads/freetype/freetype2
+
       - type: git
         url: https://github.com/ffmpeg/ffmpeg.git
         tag: n5.1.2
         commit: eacfcbae690f914a4b1b4ad06999f138540cc3d8
         dest: vcpkg/downloads/ffmpeg/ffmpeg
+
+      - type: git
+        url: https://gitlab.com/libtiff/libtiff.git
+        tag: v4.6.0
+        commit: 8b20804fc0ddeaa93667b799b5e1a2a7dc9e3fb2
+        dest: vcpkg/downloads/libtiff/libtiff
+
+      - type: git
+        url: https://github.com/libjpeg-turbo/libjpeg-turbo.git
+        tag: 3.0.3
+        commit: 7fa4b5b762c9a99b46b0b7838f5fd55071b92ea5
+        dest: vcpkg/downloads/libjpeg-turbo/libjpeg-turbo
+
+      - type: git
+        url: https://github.com/uclouvain/openjpeg.git
+        tag: v2.5.2
+        commit: 39e8c50a2f9bdcf36810ee3d41bcbf1cc78968ae
+        dest: vcpkg/downloads/uclouvain/openjpeg
+
+      - type: git
+        url: https://github.com/openssl/openssl.git
+        tag: openssl-3.3.1
+        commit: db2ac4f6ebd8f3d7b2a60882992fbea1269114e2
+        dest: vcpkg/downloads/openssl/openssl
 
       - type: git
         url: https://github.com/jedisct1/libsodium.git
@@ -283,6 +321,18 @@ modules:
         sha256: 6931283d9ac87c5073f30b6290c4c75f21632bb4fc3603ac8100812bed248159
         strip-components: 1
         dest: vcpkg/downloads/ncurses
+
+      - type: archive
+        url: https://github.com/unicode-org/icu/releases/download/release-74-2/icu4c-74_2-src.tgz
+        sha256: 68db082212a96d6f53e35d60f47d38b962e9f9d207a74cfac78029ae8ff5e08c
+        strip-components: 1
+        dest: vcpkg/downloads/icu
+
+      - type: archive
+        url: https://sqlite.org/2024/sqlite-autoconf-3460100.tar.gz
+        sha256: 67d3fe6d268e6eaddcae3727fce58fcc8e9c53869bdd07a0c61e38ddf2965071
+        strip-components: 1
+        dest: vcpkg/downloads/sqlite3
 
       - type: git
         url: https://github.com/meganz/MEGAsync.git
