@@ -69,6 +69,7 @@ modules:
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+?(PATCHES\s+[^)]+)\)' 'set(SOURCE_PATH "downloads/bzip2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${SOURCE_PATH}"\n$1)' vcpkg/ports/bzip2/portfile.cmake
 
       - ./sd -f m '        "\$\{LIBPNG_APNG_PATCH_PATH\}"' '' vcpkg/ports/libpng/portfile.cmake
+      - ./sd -f m 'unofficial-sodium::sodium_config_public' '' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
 
       - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
