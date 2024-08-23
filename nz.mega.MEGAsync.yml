@@ -54,7 +54,7 @@ modules:
       - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
 
       - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' vcpkg/ports/ncurses/portfile.cmake
-      - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/readline-unix")' vcpkg/ports/ncurses/portfile.cmake
+      - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/ncurses")' vcpkg/ports/ncurses/portfile.cmake
 
       - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' vcpkg/ports/readline-unix/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+?(PATCHES\s+[^)]+)\)' 'set(SOURCE_PATH "downloads/readline-unix")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${SOURCE_PATH}"\n$1)' vcpkg/ports/readline-unix/portfile.cmake
