@@ -70,7 +70,7 @@ modules:
 
       - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
-      - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
+      - install -D build_dir/src/MEGASync/megasync -t /app/bin/
     sources:
       # Use sd instead of sed for better regex multiline matching
       - type: archive
