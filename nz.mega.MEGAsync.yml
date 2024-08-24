@@ -67,6 +67,8 @@ modules:
       - ./sd -f m 'unofficial-sodium::sodium_config_public' '' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
       - ./sd -f m '\$<IF:\$<TARGET_EXISTS:uv_a>,uv_a,uv>' 'libuv::uv_a' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
 
+      - ./sd -f m 'lessThan\(GCC_VERSION, 5\)' 'greaterThan(GCC_VERSION, 5)' desktop/src/MEGASync/MEGASync.pro
+
       - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
       - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
