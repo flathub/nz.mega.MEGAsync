@@ -68,7 +68,7 @@ modules:
       - ./sd -f m '\$<IF:\$<TARGET_EXISTS:uv_a>,uv_a,uv>' 'uv_a' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
 
       - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
-      - cmake --build 'build_dir' --parallel --target MEGAsync
+      - cmake --build 'build_dir' --target MEGAsync
       - install -D build_dir/src/MEGASync/Release/megasync -t /app/bin/
     sources:
       # Use sd instead of sed for better regex multiline matching
