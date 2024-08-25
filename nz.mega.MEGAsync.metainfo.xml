@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+   <id>nz.mega.MEGAsync</id>
+   <name>MEGAsync</name>
+   <summary>Easy automated syncing between your computers and your MEGA cloud drive.</summary>
+   <metadata_license>CC0-1.0</metadata_license>
+   <project_license>LicenseRef-Proprietary</project_license>
+   <url type="bugtracker">https://github.com/meganz/MEGAsync/issues</url>
+   <url type="help">https://help.mega.io/</url>
+   <url type="homepage">https://mega.io/desktop</url>
+   <supports>
+       <control>pointing</control>
+       <control>keyboard</control>
+       <control>touch</control>
+   </supports>
+   <description>
+       <p>With the MEGA Desktop App, you'll have full control over your uploads and downloads. You can also sync or back up your computers with MEGA to prevent data loss and access the latest version of your data anywhere, anytime.</p>
+       <ul>
+           <li>Manage your uploads and downloads, add transfers to the queue , sort, search for, prioritise, pause, and cancel transfers.</li>
+           <li>Upload large files of unlimited size, store any type of file or folder, and with a generous transfer limits with all our plans.</li>
+           <li>With MEGA's zero-knowledge encryption, your synced files are stored securely in MEGA.</li>
+           <li>Create password-protected links with expiry dates for files and folders and share them with anyone, even non-MEGA users.</li>
+           <li>Sync multiple computers fast with MEGA at the same time.</li>
+           <li>Sync on Windows, macOS, or Linux, or even between different operating systems.</li>
+           <li>Easily access your cloud files through our desktop app, mobile apps or the web.</li>
+           <li>Public source available in our GitHub repository.</li>
+       </ul>
+       <p>You can choose from a range of plans with different storage limits of up to 16 TB. You can also get unlimited storage space with Pro Flexi and Business plans. These plans start from 3 TB of storage, but you can use more space as and when you need it.</p>
+   </description>
+   <launchable type="desktop-id">nz.mega.MEGAsync.desktop</launchable>
+   <screenshots>
+       <screenshot type="default">
+           <image>https://eu.static.mega.co.nz/3//images/mega/bottom-page/sp_sync_1_v3@2x.png</image>
+       </screenshot>
+       <screenshot>
+           <image>https://eu.static.mega.co.nz/3//images/mega/bottom-page/sp_sync_3_v2@2x.png</image>
+       </screenshot>
+       <screenshot>
+           <image>https://eu.static.mega.co.nz/3//images/mega/bottom-page/sp_sync_4@2x.png</image>
+       </screenshot>
+   </screenshots>
+   <keywords>
+       <keyword>archive</keyword>
+       <keyword>backup</keyword>
+       <keyword>cloud</keyword>
+       <keyword>filesharing</keyword>
+       <keyword>sync</keyword>
+   </keywords>
+   <releases>
+       <release version="5.4.1-1.1" date="08 Aug 2024 11:05:36">
+           <description>
+               <ul>
+                   <li>Improved handling of sync conflicts.</li>
+                   <li>Improved management of failures within issue resolution.</li>
+                   <li>Improved issue resolution dialogs.</li>
+                   <li>Added default automatic issue resolution.</li>
+                   <li>Added new UI improvements.</li>
+                   <li>Fixed other bugs and made assorted other improvements.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.7.1" date="05 Oct 2022 17:02:10">
+           <description>
+               <ul>
+                   <li>There is now a new transfer manager.</li>
+                   <li>Transfer management was enhanced and reliability of downloads and uploads improved.</li>
+                   <li>Detected crashes on Windows, Linux, and macOS fixed.</li>
+                   <li>Translation issues fixed.</li>
+                   <li>Performance improved.</li>
+                   <li>UI fixed and adjusted.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.6.8" date="20 Jul 2022 18:40:09">
+           <description>
+               <ul>
+                   <li>Full redesign of remote file picker.</li>
+                   <li>Fixed translation issues.</li>
+                   <li>Other minor UI fixes and adjustments.</li>
+                   <li>Fixed detected crashes on Windows, Linux and macOS.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.6.7" date="21 Jun 2022 14:47:30">
+           <description>
+               <ul>
+                   <li>Bug fixes and performance improvements.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.6.6" date="18 Apr 2022 19:51:45">
+           <description>
+               <ul>
+                   <li>Added support to stream file links from a folder link.</li>
+                   <li>Fixed translation issues.</li>
+                   <li>Improved the user experience.</li>
+                   <li>Added a new notifications panel in the settings dialog.</li>
+                   <li>Other minor UI fixes and adjustments.</li>
+                   <li>Fixed detected crashes on Windows, Linux and macOS.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.6.5" date="04 Mar 2022 14:23:07">
+           <description>
+               <ul>
+                   <li>Addressed MEGA Desktop App compatibility issues with newer web browser.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.6.3" date="15 Feb 2022 15:17:28">
+           <description>
+               <ul>
+                   <li>Strengthen cryptographic security on Linux repositories.</li>
+                   <li>Fix memory issues with problematic PDF files.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.6.1" date="17 Nov 2021 17:56:48">
+           <description>
+               <ul>
+                   <li>Full redesign of settings with a new look and feel.</li>
+                   <li>No longer supporting macOS versions below 10.12.</li>
+                   <li>Multi-currency support added for upgrade options.</li>
+                   <li>High DPI support for Windows platform improved.</li>
+                   <li>Crashes previously detected on Windows, Linux and macOS now fixed.</li>
+                   <li>Other performance improvements and adjustments.</li>
+                   <li>Other UI fixes and adjustments.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.5.3" date="19 Jul 2021 18:32:42">
+           <description>
+               <ul>
+                   <li>New improvements for the management of the syncs.</li>
+                   <li>Improved user experience when syncs are disabled.</li>
+                   <li>Enhanced system notifications to notify various account events.</li>
+                   <li>Improved user experience while working with huge number of transfers and syncs.</li>
+                   <li>Fixed issues of high CPU usage of gnome-shell when running on Ubuntu.</li>
+                   <li>Fixed detected crashes on Windows and Linux.</li>
+                   <li>Other performance improvements and adjustments.</li>
+                   <li>Other UI fixes and adjustments.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.4.0" date="28 Jan 2021 13:15:53">
+           <description>
+               <ul>
+                   <li>Fixed detected crashes on Windows and Linux.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.3.8" date="23 Nov 2020 20:45:39">
+           <description>
+               <ul>
+                   <li>Fixed decryption errors for downloads during integrity verification.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.3.7" date="09 Nov 2020 20:53:48">
+           <description>
+               <ul>
+                   <li>Fixed issue verifying downloads integrity.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.3.3" date="22 Jun 2020 19:45:02">
+           <description>
+               <ul>
+                   <li>New customized message boxes.</li>
+                   <li>Clean retroactive logs when logout.</li>
+                   <li>Fixed issues that disable Finder extension under some circumstances.</li>
+                   <li>Email verification for locked accounts.</li>
+                   <li>SMS verification for locked accounts.</li>
+                   <li>Support for affiliate program.</li>
+                   <li>Included option to send logs from crash report dialog.</li>
+                   <li>Other UI fixes and adjustments.</li>
+                   <li>Other performance improvements and adjustments.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.3.1" date="17 Mar 2020 14:13:40">
+           <description>
+               <ul>
+                   <li>Performance improvements for the sync engine.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.3.0" date="26 Feb 2020 14:42:36">
+           <description>
+               <ul>
+                   <li>Support for user notifications.</li>
+                   <li>Support to send bug reports from settings dialog.</li>
+                   <li>New restyling of main dialog.</li>
+                   <li>Performance improvements when dealing with huge amount of syncs and transfers.</li>
+                   <li>Improved support for business accounts.</li>
+                   <li>Support links to files and folders inside a public folder link.</li>
+                   <li>Improvements for synchronization with FAT32 filesystems.</li>
+                   <li>Other UI fixes and adjustments.</li>
+                   <li>Other performance improvements, UI fixes and adjustments.</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.2.5" date="06 Sep 2019 14:31:36">
+           <description>
+               <ul>
+                   <li>Fix sync issues on macOS 10.15</li>
+                   <li>Fix transfer resumption issues for webclient and public links downloads</li>
+                   <li>Fix a crash during processing of some PDF files</li>
+                   <li>Resume pending transfers after a crash on next startup</li>
+                   <li>Include option to add synchronizations from the main dialog</li>
+                   <li>Other minor bug fixes and improvements</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.2.3" date="19 Aug 2019 19:00:52">
+           <description>
+               <ul>
+                   <li>Fix a crash during processing of some PDF files</li>
+                   <li>Resume pending transfers after a crash on next startup</li>
+                   <li>Include option to add synchronizations from the main dialog</li>
+                   <li>Other minor bug fixes and improvements</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.1.1" date="16 May 2019 12:27:20">
+           <description>
+               <ul>
+                   <li>Improved look&amp;feel for high resolution displays on Windows and Linux</li>
+                   <li>Improved GUI performance during addition of many downloads</li>
+                   <li>Restyling of initial information wizard, new icons and interface improvements</li>
+                   <li>Support for business accounts</li>
+                   <li>Other minor bug fixes and improvements</li>
+                   <li>Enable thumbnail support for PDF</li>
+               </ul>
+           </description>
+       </release>
+       <release version="4.0.2" date="04 Feb 2019 19:48:32">
+           <description>
+               <ul>
+                   <li>Fix bug with selection of transfer manager items</li>
+                   <li>Fix bug of context menu not shown over transfer manager items</li>
+                   <li>New design for the main dialog</li>
+                   <li>Improved setup assistant</li>
+                   <li>Support to show Public Service Announcements</li>
+                   <li>Modern notifications</li>
+                   <li>Updated third-party libraries</li>
+                   <li>Other minor bug fixes and improvements</li>
+               </ul>
+           </description>
+       </release>
+       <release version="3.7.1" date="12 Sep 2018 19:41:17">
+           <description>
+               <ul>
+                   <li>Support for multi-factor authentication</li>
+                   <li>Security improvements for the registration of new accounts</li>
+                   <li>Better performance for the upload of images</li>
+                   <li>Creation of thumbnails and previews for RAW images</li>
+                   <li>Improvements in the management of network connections</li>
+                   <li>New logic to get external changes in the MEGA account</li>
+                   <li>Other minor bug fixes and improvements</li>
+               </ul>
+           </description>
+       </release>
+       <release version="3.6.6" date="23 May 2018 17:27:38">
+           <description>
+               <ul>
+                   <li>General Data Protection Regulation (GDPR) compliance</li>
+                   <li>Updated translations</li>
+                   <li>Bug fixes and other minor adjustments</li>
+               </ul>
+           </description>
+       </release>
+       <release version="3.6.5" date="02 May 2018 13:09:17">
+           <description>
+               <ul>
+                   <li>Allow to change the password</li>
+                   <li>Improvements for the sync engine</li>
+                   <li>Updated third-party libraries</li>
+                   <li>Bug fixes and other minor adjustments</li>
+               </ul>
+           </description>
+       </release>
+       <release version="3.6.0" date="26 Jan 2018 11:36:06">
+           <description>
+               <ul>
+                   <li>New options related to file versioning</li>
+                   <li>Local backup cleaning scheduler</li>
+                   <li>Support for video thumbnails and metadata</li>
+                   <li>Bug fixes and other minor improvements</li>
+               </ul>
+           </description>
+       </release>
+       <release version="3.5.3" date="13 Dec 2017 12:06:31">
+           <description>
+               <ul>
+                   <li>Integration with Finder (macOS 10.10+)</li>
+                   <li>Faster scanning of files</li>
+                   <li>Improved the management of deleted files</li>
+                   <li>Bug fixes and other minor improvements</li>
+               </ul>
+           </description>
+       </release>
+       <release version="3.5" date="07 Nov 2017 18:10:19">
+           <description>
+               <ul>
+                   <li>New UI style</li>
+                   <li>Support to generate file versions in MEGA</li>
+                   <li>Integration with Finder (macOS 10.10+)</li>
+                   <li>Allow to exclude specific files/folders</li>
+                   <li>Bug fixes and other minor improvements</li>
+               </ul>
+           </description>
+       </release>
+       <release version="3.1.4" date="23 Jun 2017 12:43:22">
+           <description>
+               <ul>
+                   <li>Support for Apple File System (macOS High Sierra)</li>
+                   <li>Allow to disable left pane icons in settings (Windows 10)</li>
+                   <li>Updated translations</li>
+                   <li>Bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="3.1.2" date="12 May 2017 12:42:51">
+           <description>
+               <ul>
+                   <li>Better integration with Windows 10</li>
+                   <li>Updated SSL certificate for communications with the web</li>
+                   <li>Deprecated OS X versions prior to Mavericks</li>
+                   <li>Bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="3.0.1" date="06 Feb 2017 12:07:29">
+           <description>
+               <ul>
+                   <li>Transfer manager</li>
+                   <li>Transfer speed control</li>
+                   <li>Configurable number of connections per transfer</li>
+                   <li>Improved the transfer speed</li>
+                   <li>Reduced CPU usage during synchronization</li>
+                   <li>Bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.9.10" date="11 Nov 2016 14:16:26">
+           <description>
+               <ul>
+                   <li>Support to download/import folder links</li>
+                   <li>Automatic HTTP/HTTPS proxy detection on OS X</li>
+                   <li>Better compatibility with antivirus software</li>
+                   <li>HDPI support for Linux distros having QT >= 5.6</li>
+                   <li>Other bug fixes and minor improvements</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.9.9" date="17 Oct 2016 17:28:29">
+           <description>
+               <ul>
+                   <li>Fixed compatibility with some web browsers</li>
+                   <li>Fixed the creation of thumbnails for JPG images (Windows)</li>
+                   <li>Fixed incompatibilities with some WiFi drivers (Windows)</li>
+                   <li>Fixed problems downloading files with incorrect metadata</li>
+                   <li>Other bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.9.8" date="20 Jul 2016 19:08:50">
+           <description>
+               <ul>
+                   <li>More efficient upload completion</li>
+                   <li>Creation of new cryptographic keys</li>
+                   <li>Upgrade to QT5 and VS2015 (Windows)</li>
+                   <li>Bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.9.5" date="31 May 2016 12:05:33">
+           <description>
+               <ul>
+                   <li>Save the state and resume transfers</li>
+                   <li>Better management of errors during transfers</li>
+                   <li>Compatibility with HDPI displays</li>
+                   <li>Bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.9.0" date="11 Apr 2016 20:11:50">
+           <description>
+               <ul>
+                   <li>Management of bandwidth quota for PRO users</li>
+                   <li>New information dialog</li>
+                   <li>ARM support (Raspberry Pi)</li>
+                   <li>Bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.8.0" date="06 Apr 2016 17:32:34">
+           <description>
+               <ul>
+                   <li>Check if public links have been already downloaded</li>
+                   <li>Better management of communications with the webclient</li>
+                   <li>Management of bandwidth quotas</li>
+                   <li>Bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.7.2" date="01 Mar 2016 13:10:21">
+           <description>
+               <ul>
+                   <li>Fixed the compilation. The previous version failed with some CPUs</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.7.1" date="21 Feb 2016 02:38:15">
+           <description>
+               <ul>
+                   <li>Allow to select hidden files and folders</li>
+                   <li>Management of permissions (OS X, Linux)</li>
+                   <li>Better management of HTTPS errors</li>
+                   <li>Allow to use HTTPS connections only</li>
+                   <li>Bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.6.1" date="19 Jan 2016 14:52:38">
+           <description>
+               <ul>
+                   <li>Streaming from MEGA with a builtin HTTP proxy server</li>
+                   <li>Fixed the automatic detection of the proxy (Win32)</li>
+                   <li>More and better translations</li>
+                   <li>Bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.5.3" date="04 Jan 2016 12:16:28">
+           <description>
+               <ul>
+                   <li>Allow the usage of MEGAsync without being logged in</li>
+                   <li>New network layer using cURL and c-ares (Win32)</li>
+                   <li>Accessibility and SOCKS5 proxy support (Win32)</li>
+                   <li>Bug fixes and improvements for the synchronization engine</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.3.1" date="8 Oct 2015 19:51:46">
+           <description>
+               <ul>
+                   <li>Inform about MITM attacks</li>
+                   <li>Compatibility with OS X 10.11 El Capita</li>
+                   <li>Improvements for the synchronization engine</li>
+                   <li>Bug fixes</li>
+               </ul>
+           </description>
+       </release>
+       <release version="2.1.1" date="10 Aug 2015 10:10:10">
+           <description>
+               <ul>
+                   <li>Built with a custom version of QT that will allow us to debug crashes in QT libraries</li>
+                   <li>List of allowed origins for webclient communications</li>
+                   <li>Disable the crash handler when MEGAsync is being closed (to ignore crashes closing QT when the app exits)</li>
+                   <li>Report events for new installations</li>
+                   <li>Built with a custom version of QT that will allow us to debug crashes in QT libraries</li>
+                   <li>List of allowed origins for webclient communications</li>
+                   <li>Disable the crash handler when MEGAsync is being closed (to ignore crashes closing QT when the app exits)</li>
+                   <li>Report events for new installations</li>
+                   <li>Built with a custom version of QT that will allow us to debug crashes in QT libraries</li>
+                   <li>List of allowed origins for webclient communications</li>
+                   <li>Disable the crash handler when MEGAsync is being closed (to ignore crashes closing QT when the app exits)</li>
+                   <li>Report events for new installations</li>
+                   <li>Built with a custom version of QT that will allow us to debug crashes in QT libraries</li>
+                   <li>List of allowed origins for webclient communications</li>
+                   <li>Disable the crash handler when MEGAsync is being closed (to ignore crashes closing QT when the app exits)</li>
+                   <li>Report events for new installations</li>
+               </ul>
+           </description>
+       </release>
+   </releases>
+</component>

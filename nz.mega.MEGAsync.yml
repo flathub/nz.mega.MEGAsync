@@ -70,8 +70,20 @@ modules:
 
       - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
-      - install -D build_dir/src/MEGASync/megasync -t /app/bin/
+
+      - install -Dm755 build_dir/src/MEGASync/megasync -t $FLATPAK_DEST/bin/
+      - install -Dm644 $FLATPAK_ID.metainfo.xml -t $FLATPAK_DEST/share/metainfo/
+      - install -Dm644 desktop/src/MEGASync/platform/linux/data/megasync.desktop $FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop
+
+      - install -dm644 $FLATPAK_DEST/share/icons/hicolor/
+      - cp -r desktop/src/MEGASync/platform/linux/data/icons/hicolor/* $FLATPAK_DEST/share/icons/hicolor/
+      - find $FLATPAK_DEST/share/icons/hicolor/ -name 'mega.png' -type f -execdir mv {} $FLATPAK_ID.png' \;
+      - chmod -R 644 $FLATPAK_DEST/share
+
     sources:
+      - type: file
+        path: $FLATPAK_ID.metainfo.xml
+
       # Use sd instead of sed for better regex multiline matching
       - type: archive
         url: https://github.com/chmln/sd/releases/download/v1.0.0/sd-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
