@@ -71,18 +71,18 @@ modules:
       - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
 
-      - install -Dm755 build_dir/src/MEGASync/megasync -t $FLATPAK_DEST/bin/
-      - install -Dm644 $FLATPAK_ID.metainfo.xml -t $FLATPAK_DEST/share/metainfo/
-      - install -Dm644 desktop/src/MEGASync/platform/linux/data/megasync.desktop $FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop
+      - install -Dm755 build_dir/src/MEGASync/megasync -t /app/bin/
+      - install -Dm644 nz.mega.MEGAsync.metainfo.xml -t /app/share/metainfo/
+      - install -Dm644 desktop/src/MEGASync/platform/linux/data/megasync.desktop /app/share/applications/nz.mega.MEGAsync.desktop
 
-      - install -dm644 $FLATPAK_DEST/share/icons/hicolor/
-      - cp -r desktop/src/MEGASync/platform/linux/data/icons/hicolor/* $FLATPAK_DEST/share/icons/hicolor/
-      - find $FLATPAK_DEST/share/icons/hicolor/ -name 'mega.png' -type f -execdir mv {} $FLATPAK_ID.png' \;
-      - chmod -R 644 $FLATPAK_DEST/share
+      - install -dm644 /app/share/icons/hicolor/
+      - cp -r desktop/src/MEGASync/platform/linux/data/icons/hicolor/* /app/share/icons/hicolor/
+      - find /app/share/icons/hicolor/ -name 'mega.png' -type f -execdir mv {} nz.mega.MEGAsync.png' \;
+      - chmod -R 644 /app/share
 
     sources:
       - type: file
-        path: "${FLATPAK_ID}.metainfo.xml"
+        path: nz.mega.MEGAsync.metainfo.xml
 
       # Use sd instead of sed for better regex multiline matching
       - type: archive
