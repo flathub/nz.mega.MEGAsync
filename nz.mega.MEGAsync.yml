@@ -16,9 +16,9 @@ finish-args:
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
 command: megasync
-rename-icon: mega
-copy-icon: true
-rename-desktop-file: megasync.desktop
+# rename-icon: mega
+# copy-icon: true
+# rename-desktop-file: megasync.desktop
 cleanup:
   - "*.a"
   - "*.la"
