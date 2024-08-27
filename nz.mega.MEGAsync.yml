@@ -71,7 +71,8 @@ modules:
       - ./sd -f m 'set\(CMAKE_INSTALL_LIBDIR "opt/megasync/lib"\)' '' desktop/contrib/cmake/modules/desktopapp_configuration.cmake
       - ./sd -f m 'set\(CMAKE_INSTALL_BINDIR "usr/bin"\)' '' desktop/contrib/cmake/modules/desktopapp_configuration.cmake
 
-      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_INSTALL_PREFIX='/app' -DCMAKE_BUILD_TYPE=Release
+      - mkdir binary-cache
+      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DVCPKG_BINARY_SOURCES='clear;files,binary-cache,readwrite' -DCMAKE_INSTALL_PREFIX='/app' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
 
       - install -Dm755 build_dir/src/MEGASync/megasync -t /app/bin/
@@ -80,7 +81,7 @@ modules:
 
       - mkdir -p /app/share/icons/hicolor/
       - cp -r desktop/src/MEGASync/platform/linux/data/icons/hicolor/* /app/share/icons/hicolor/
-      - find /app/share/icons/hicolor/ -name 'mega.png' -type f -execdir mv {} nz.mega.MEGAsync.png' \;
+      - find /app/share/icons/hicolor/ -name 'mega.png' -type f -execdir mv {} nz.mega.MEGAsync.png \;
       - chmod -R 644 /app/share
 
     sources:
