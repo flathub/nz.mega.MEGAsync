@@ -172,12 +172,16 @@ modules:
       - type: patch
         dest: desktop
         paths:
-          - patches/0020-build-patch-for-MEGASync.pro.patch
-          - patches/0030-remove-obsolete-ffmpeg-macros.patch
-          - patches/0040-set-DontUseNativeDialog-true.patch
-          - patches/0050-remove-version-constraints.patch
+          - patches/remove-version-constraints.patch
+          - patches/remove-obsolete-ffmpeg-macros.patch
+          - patches/set-DontUseNativeDialog-true.patch
 
-      # Download vcpkg which contains the cmake and portfiles of dependencies
+
+      #
+      # BUILD TOOLS
+      #
+
+      # Download vcpkg which contains the cmake files and portfiles of dependencies
       - type: git
         url: https://github.com/microsoft/vcpkg.git
         branch: master
@@ -189,6 +193,13 @@ modules:
         sha256: da93a3693911c15406e0a9d2562c0db142ee63b77e4268ab55ea9e87b390ec7b
         dest: vcpkg
         dest-filename: vcpkg
+
+      # Download pkgconf as required by MEGAsync for build
+      - type: git
+        url: https://github.com/pkgconf/pkgconf.git
+        tag: pkgconf-2.3.0
+        commit: a88c0d962a987c62d98ede5a738e37ec71005cbd
+        dest: vcpkg/downloads/pkgconf/pkgconf
 
       # Use sd instead of sed for better regex multiline matching
       - type: archive
@@ -209,24 +220,24 @@ modules:
         dest: vcpkg/downloads
         dest-filename: meson.tar.gz
 
-      - type: archive
-        url: https://nchc.dl.sourceforge.net/project/freeimage/Source%20Distribution/3.18.0/FreeImage3180.zip
-        sha256: f41379682f9ada94ea7b34fe86bf9ee00935a3147be41b6569c9605a53e438fd
-        strip-components: 1
-        dest: vcpkg/downloads/freeimage/Source%20Distribution
 
-      # Download pkgconf as required by MEGAsync for build
-      - type: git
-        url: https://github.com/pkgconf/pkgconf.git
-        tag: pkgconf-2.3.0
-        commit: a88c0d962a987c62d98ede5a738e37ec71005cbd
-        dest: vcpkg/downloads/pkgconf/pkgconf
+      #
+      # DEPENDENCIES
+      #
 
       - type: git
         url: https://github.com/google/brotli.git
         tag: v1.1.0
         commit: ed738e842d2fbdf2d6459e39267a633c4a9b2f5d
         dest: vcpkg/downloads/google/brotli
+
+      - type: archive
+        url: https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
+        mirror-urls:
+          - https://www.mirrorservice.org/sites/sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
+        sha256: ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269
+        strip-components: 1
+        dest: vcpkg/downloads/bzip2
 
       - type: git
         url: https://github.com/c-ares/c-ares.git
@@ -235,10 +246,20 @@ modules:
         dest: vcpkg/downloads/c-ares/c-ares
 
       - type: git
-        url: https://github.com/curl/curl.git
-        tag: curl-8_9_1
-        commit: 83bedbd730d62b83744cc26fa0433d3f6e2e4cd6
-        dest: vcpkg/downloads/curl/curl
+        url: https://chromium.googlesource.com/chromium/src/build.git
+        commit: 26f8da34750ac3bccf683ed5f70d86f21c54b22b
+        dest: vcpkg/downloads/ee44620f2b58999b0d272d58fa0b994d5935f688/build
+
+      - type: git
+        url: https://chromium.googlesource.com/chromium/src/third_party/abseil-cpp.git
+        commit: 62a4d6866aeeca02036c510b2f3f286084dd62af
+        dest: vcpkg/downloads/ee44620f2b58999b0d272d58fa0b994d5935f688/third_party/abseil-cpp
+
+      - type: git
+        url: https://github.com/weidai11/cryptopp.git
+        tag: CRYPTOPP_8_9_0
+        commit: 843d74c7c97f9e19a615b8ff3c0ca06599ca501b
+        dest: vcpkg/downloads/weidai11/cryptopp
 
       - type: git
         url: https://github.com/abdes/cryptopp-cmake.git
@@ -247,10 +268,22 @@ modules:
         dest: vcpkg/downloads/abdes/cryptopp-cmake
 
       - type: git
-        url: https://github.com/weidai11/cryptopp.git
-        tag: CRYPTOPP_8_9_0
-        commit: 843d74c7c97f9e19a615b8ff3c0ca06599ca501b
-        dest: vcpkg/downloads/weidai11/cryptopp
+        url: https://github.com/curl/curl.git
+        tag: curl-8_9_1
+        commit: 83bedbd730d62b83744cc26fa0433d3f6e2e4cd6
+        dest: vcpkg/downloads/curl/curl
+
+      - type: git
+        url: https://github.com/ffmpeg/ffmpeg.git
+        tag: n5.1.2
+        commit: eacfcbae690f914a4b1b4ad06999f138540cc3d8
+        dest: vcpkg/downloads/ffmpeg/ffmpeg
+
+      - type: archive
+        url: https://nchc.dl.sourceforge.net/project/freeimage/Source%20Distribution/3.18.0/FreeImage3180.zip
+        sha256: f41379682f9ada94ea7b34fe86bf9ee00935a3147be41b6569c9605a53e438fd
+        strip-components: 1
+        dest: vcpkg/downloads/freeimage/Source%20Distribution
 
       - type: archive
         url: https://nchc.dl.sourceforge.net/project/freetype/freetype2/2.13.2/freetype-2.13.2.tar.xz
@@ -259,10 +292,69 @@ modules:
         dest: vcpkg/downloads/freetype/freetype2
 
       - type: git
-        url: https://github.com/ffmpeg/ffmpeg.git
-        tag: n5.1.2
-        commit: eacfcbae690f914a4b1b4ad06999f138540cc3d8
-        dest: vcpkg/downloads/ffmpeg/ffmpeg
+        url: https://github.com/AcademySoftwareFoundation/Imath.git
+        tag: v3.1.11
+        commit: 5ac1d5335cb34f0f356c5f2461a57c845b96b115
+        dest: vcpkg/downloads/AcademySoftwareFoundation/Imath
+
+      - type: archive
+        url: https://github.com/unicode-org/icu/releases/download/release-74-2/icu4c-74_2-src.tgz
+        sha256: 68db082212a96d6f53e35d60f47d38b962e9f9d207a74cfac78029ae8ff5e08c
+        strip-components: 1
+        dest: vcpkg/downloads/icu
+
+      - type: git
+        url: https://github.com/jasper-software/jasper.git
+        tag: version-4.2.1
+        commit: 7359c0dfa505c9d710233b8724690a4407c4702d
+        dest: vcpkg/downloads/jasper-software/jasper
+
+      - type: git
+        url: https://github.com/4creators/jxrlib.git
+        tag: v2019.10.9
+        commit: f7521879862b9085318e814c6157490dd9dbbdb4
+        dest: vcpkg/downloads/4creators/jxrlib
+
+      - type: git
+        url: https://github.com/mm2/Little-CMS.git
+        tag: lcms2.14
+        commit: e88d9bcad79b7ebf6b97ebd634af31ed23c1b910
+        dest: vcpkg/downloads/mm2/Little-CMS
+
+      - type: git
+        url: https://github.com/ebiggers/libdeflate.git
+        tag: v1.21
+        commit: 9be1c54e6086cd1f9e1e7dece96eb6d1355c93f7
+        dest: vcpkg/downloads/ebiggers/libdeflate
+
+      - type: git
+        url: https://github.com/libjpeg-turbo/libjpeg-turbo.git
+        tag: 3.0.3
+        commit: 7fa4b5b762c9a99b46b0b7838f5fd55071b92ea5
+        dest: vcpkg/downloads/libjpeg-turbo/libjpeg-turbo
+
+      - type: git
+        url: https://github.com/glennrp/libpng.git
+        tag: v1.6.43
+        commit: ed217e3e601d8e462f7fd1e04bed43ac42212429
+        dest: vcpkg/downloads/glennrp/libpng
+
+      - type: git
+        url: https://github.com/LibRaw/LibRaw.git
+        tag: 0.21.1
+        commit: cccb97647fcee56801fa68231fa8a38aa8b52ef7
+        dest: vcpkg/downloads/LibRaw/LibRaw
+
+      - type: git
+        url: https://github.com/LibRaw/LibRaw-cmake.git
+        commit: 6e26c9e73677dc04f9eb236a97c6a4dc225ba7e8
+        dest: vcpkg/downloads/LibRaw/LibRaw-cmake
+
+      - type: git
+        url: https://github.com/jedisct1/libsodium.git
+        tag: 1.0.20-RELEASE
+        commit: 9511c982fb1d046470a8b42aa36556cdb7da15de
+        dest: vcpkg/downloads/jedisct1/libsodium
 
       - type: git
         url: https://gitlab.com/libtiff/libtiff.git
@@ -271,10 +363,36 @@ modules:
         dest: vcpkg/downloads/libtiff/libtiff
 
       - type: git
-        url: https://github.com/libjpeg-turbo/libjpeg-turbo.git
-        tag: 3.0.3
-        commit: 7fa4b5b762c9a99b46b0b7838f5fd55071b92ea5
-        dest: vcpkg/downloads/libjpeg-turbo/libjpeg-turbo
+        url: https://github.com/libuv/libuv.git
+        tag: v1.48.0
+        commit: e9f29cb984231524e3931aa0ae2c5dae1a32884e
+        dest: vcpkg/downloads/libuv/libuv
+
+      - type: git
+        url: https://github.com/webmproject/libwebp.git
+        tag: v1.4.0
+        commit: 845d5476a866141ba35ac133f856fa62f0b7445f
+        dest: vcpkg/downloads/webmproject/libwebp
+
+      - type: git
+        url: https://github.com/MediaArea/MediaInfoLib.git
+        tag: v24.06
+        commit: 547f070e74f1054ebd8ef17e36f8e9d7b6e53e92
+        dest: vcpkg/downloads/MediaArea/MediaInfoLib
+
+      - type: archive
+        url: https://ftp.gnu.org/gnu/ncurses/ncurses-6.4.tar.gz
+        mirror-urls:
+          - https://invisible-mirror.net/archives/ncurses/ncurses-6.4.tar.gz
+        sha256: 6931283d9ac87c5073f30b6290c4c75f21632bb4fc3603ac8100812bed248159
+        strip-components: 1
+        dest: vcpkg/downloads/ncurses
+
+      - type: git
+        url: https://github.com/AcademySoftwareFoundation/openexr.git
+        tag: v3.2.4
+        commit: a1a00ffeecf627bbbc010d40700720bee48b2af7
+        dest: vcpkg/downloads/AcademySoftwareFoundation/openexr
 
       - type: git
         url: https://github.com/uclouvain/openjpeg.git
@@ -289,128 +407,9 @@ modules:
         dest: vcpkg/downloads/openssl/openssl
 
       - type: git
-        url: https://github.com/jedisct1/libsodium.git
-        tag: 1.0.20-RELEASE
-        commit: 9511c982fb1d046470a8b42aa36556cdb7da15de
-        dest: vcpkg/downloads/jedisct1/libsodium
-
-      - type: git
-        url: https://github.com/madler/zlib.git
-        tag: v1.3.1
-        commit: 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf
-        dest: vcpkg/downloads/madler/zlib
-
-      - type: git
-        url: https://github.com/libuv/libuv.git
-        tag: v1.48.0
-        commit: e9f29cb984231524e3931aa0ae2c5dae1a32884e
-        dest: vcpkg/downloads/libuv/libuv
-
-      - type: git
-        url: https://github.com/MediaArea/MediaInfoLib.git
-        tag: v24.06
-        commit: 547f070e74f1054ebd8ef17e36f8e9d7b6e53e92
-        dest: vcpkg/downloads/MediaArea/MediaInfoLib
-
-      - type: git
-        url: https://github.com/leethomason/tinyxml2.git
-        tag: 10.0.0
-        commit: 321ea883b7190d4e85cae5512a12e5eaa8f8731f
-        dest: vcpkg/downloads/leethomason/tinyxml2
-
-      - type: git
-        url: https://github.com/MediaArea/ZenLib.git
-        tag: v0.4.41
-        commit: 894980d3ecbc843d6ac685493f8f2ed5c2b6864c
-        dest: vcpkg/downloads/MediaArea/ZenLib
-
-      - type: git
-        url: https://github.com/tukaani-project/xz.git
-        tag: v5.6.2
-        commit: 3ec664d3f652133136587a51d4505b1abe1acdd7
-        dest: vcpkg/downloads/tukaani-project/xz
-
-      - type: git
-        url: https://github.com/ebiggers/libdeflate.git
-        tag: v1.21
-        commit: 9be1c54e6086cd1f9e1e7dece96eb6d1355c93f7
-        dest: vcpkg/downloads/ebiggers/libdeflate
-
-      - type: git
-        url: https://github.com/AcademySoftwareFoundation/Imath.git
-        tag: v3.1.11
-        commit: 5ac1d5335cb34f0f356c5f2461a57c845b96b115
-        dest: vcpkg/downloads/AcademySoftwareFoundation/Imath
-
-      - type: git
-        url: https://github.com/AcademySoftwareFoundation/openexr.git
-        tag: v3.2.4
-        commit: a1a00ffeecf627bbbc010d40700720bee48b2af7
-        dest: vcpkg/downloads/AcademySoftwareFoundation/openexr
-
-      - type: git
-        url: https://github.com/LibRaw/LibRaw.git
-        tag: 0.21.1
-        commit: cccb97647fcee56801fa68231fa8a38aa8b52ef7
-        dest: vcpkg/downloads/LibRaw/LibRaw
-
-      - type: git
-        url: https://github.com/LibRaw/LibRaw-cmake.git
-        commit: 6e26c9e73677dc04f9eb236a97c6a4dc225ba7e8
-        dest: vcpkg/downloads/LibRaw/LibRaw-cmake
-
-      - type: git
         url: https://pdfium.googlesource.com/pdfium.git
         commit: ee44620f2b58999b0d272d58fa0b994d5935f688
         dest: vcpkg/downloads/ee44620f2b58999b0d272d58fa0b994d5935f688
-
-      - type: git
-        url: https://chromium.googlesource.com/chromium/src/build.git
-        commit: 26f8da34750ac3bccf683ed5f70d86f21c54b22b
-        dest: vcpkg/downloads/ee44620f2b58999b0d272d58fa0b994d5935f688/build
-
-      - type: git
-        url: https://chromium.googlesource.com/chromium/src/third_party/abseil-cpp.git
-        commit: 62a4d6866aeeca02036c510b2f3f286084dd62af
-        dest: vcpkg/downloads/ee44620f2b58999b0d272d58fa0b994d5935f688/third_party/abseil-cpp
-
-      - type: git
-        url: https://github.com/4creators/jxrlib.git
-        tag: v2019.10.9
-        commit: f7521879862b9085318e814c6157490dd9dbbdb4
-        dest: vcpkg/downloads/4creators/jxrlib
-
-      - type: git
-        url: https://github.com/jasper-software/jasper.git
-        tag: version-4.2.1
-        commit: 7359c0dfa505c9d710233b8724690a4407c4702d
-        dest: vcpkg/downloads/jasper-software/jasper
-
-      - type: git
-        url: https://github.com/webmproject/libwebp.git
-        tag: v1.4.0
-        commit: 845d5476a866141ba35ac133f856fa62f0b7445f
-        dest: vcpkg/downloads/webmproject/libwebp
-
-      - type: git
-        url: https://github.com/mm2/Little-CMS.git
-        tag: lcms2.14
-        commit: e88d9bcad79b7ebf6b97ebd634af31ed23c1b910
-        dest: vcpkg/downloads/mm2/Little-CMS
-
-      - type: git
-        url: https://github.com/glennrp/libpng.git
-        tag: v1.6.43
-        commit: ed217e3e601d8e462f7fd1e04bed43ac42212429
-        dest: vcpkg/downloads/glennrp/libpng
-
-      - type: archive
-        url: https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
-        mirror-urls:
-          - https://www.mirrorservice.org/sites/sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
-        sha256: ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269
-        strip-components: 1
-        dest: vcpkg/downloads/bzip2
 
       - type: archive
         url: https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz
@@ -419,26 +418,37 @@ modules:
         sha256: 3feb7171f16a84ee82ca18a36d7b9be109a52c04f492a053331d7d1095007c35
         strip-components: 1
         dest: vcpkg/downloads/readline-unix
-
-      - type: archive
-        url: https://ftp.gnu.org/gnu/ncurses/ncurses-6.4.tar.gz
-        mirror-urls:
-          - https://invisible-mirror.net/archives/ncurses/ncurses-6.4.tar.gz
-        sha256: 6931283d9ac87c5073f30b6290c4c75f21632bb4fc3603ac8100812bed248159
-        strip-components: 1
-        dest: vcpkg/downloads/ncurses
-
-      - type: archive
-        url: https://github.com/unicode-org/icu/releases/download/release-74-2/icu4c-74_2-src.tgz
-        sha256: 68db082212a96d6f53e35d60f47d38b962e9f9d207a74cfac78029ae8ff5e08c
-        strip-components: 1
-        dest: vcpkg/downloads/icu
-
+        
       - type: archive
         url: https://sqlite.org/2024/sqlite-autoconf-3460100.tar.gz
         sha256: 67d3fe6d268e6eaddcae3727fce58fcc8e9c53869bdd07a0c61e38ddf2965071
         strip-components: 1
         dest: vcpkg/downloads/sqlite3
+
+      - type: git
+        url: https://github.com/leethomason/tinyxml2.git
+        tag: 10.0.0
+        commit: 321ea883b7190d4e85cae5512a12e5eaa8f8731f
+        dest: vcpkg/downloads/leethomason/tinyxml2
+
+      - type: git
+        url: https://github.com/tukaani-project/xz.git
+        tag: v5.6.2
+        commit: 3ec664d3f652133136587a51d4505b1abe1acdd7
+        dest: vcpkg/downloads/tukaani-project/xz
+
+      - type: git
+        url: https://github.com/MediaArea/ZenLib.git
+        tag: v0.4.41
+        commit: 894980d3ecbc843d6ac685493f8f2ed5c2b6864c
+        dest: vcpkg/downloads/MediaArea/ZenLib      
+
+      - type: git
+        url: https://github.com/madler/zlib.git
+        tag: v1.3.1
+        commit: 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf
+        dest: vcpkg/downloads/madler/zlib
+
 
       # Uncomment if you are doing some local testing. Saves time compiling the binaries.
       # During initial build this will be empty.
