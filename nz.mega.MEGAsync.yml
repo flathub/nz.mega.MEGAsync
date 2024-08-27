@@ -16,9 +16,13 @@ finish-args:
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
 command: megasync
-# rename-icon: mega
-# copy-icon: true
-# rename-desktop-file: megasync.desktop
+rename-desktop-file: megasync.desktop
+rename-icon: mega
+copy-icon: true
+build-options:
+  no-debuginfo: true
+  env:
+    VCPKG_DEFAULT_BINARY_CACHE: /run/build/MEGAsync/binary-cache
 cleanup:
   - "*.a"
   - "*.la"
@@ -28,78 +32,131 @@ cleanup:
   - /share/doc
   - /share/man
 modules:
+  - name: xrdb
+    sources:
+      - type: archive
+        url: https://www.x.org/releases/individual/app/xrdb-1.2.2.tar.gz
+        sha256: db2d774a35ae2f7e7ac61cc2de0dcae27fc2aa14399c35721f8300e63ea73549
+        x-checker-data:
+          type: html
+          url: https://www.x.org/releases/individual/app/
+          pattern: (xrdb-(\d\.\d+\.?\d*).tar.gz)
+    modules:
+      - name: libXmu
+        sources:
+          - type: archive
+            url: https://www.x.org/releases/individual/lib/libXmu-1.2.1.tar.gz
+            sha256: bf0902583dd1123856c11e0a5085bd3c6e9886fbbd44954464975fd7d52eb599
+            x-checker-data:
+              type: html
+              url: https://www.x.org/releases/individual/lib/
+              pattern: (libXmu-(\d\.\d+\.?\d*).tar.gz)
   - name: MEGAsync
     buildsystem: simple
-    build-options:
-      env:
-        VCPKG_DEFAULT_BINARY_CACHE: binary-cache
     build-commands:
+      #
+      # PORTFILE WORKAROUNDS
+      #
+      
+      # GENERIC METHOD
+      # Find portfile.cmake in these two locations only
       - find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports -name 'portfile.cmake' -type f -fprint0 PORTFILES
+      # Match all instances of vcpkg_from_* that has patches and replace it with a local source path and apply the patches
       - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?(?:GITLAB_URL\s+[^)]+)*OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' < PORTFILES
+      # Match all instances of vcpkg_from_* only and replace it with a local source path
       - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?(?:GITLAB_URL\s+[^)]+)*OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' < PORTFILES
+      - xargs -0 ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' < PORTFILES
+      # Copy the source path to its proper location where vcpkg will look for it
+      # Do this just before any configure methods executes because some portfiles does other transformations to the source path after downloading.
       - xargs -0 ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(COPY $${SOURCE_PATH}/ DESTINATION $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' < PORTFILES
 
+      # SPECIFIC METHOD FOR PDFIUM
+      # Remove pdfium's custom function that download sources
       - ./sd -f m 'pdfium_from_git\([^\)]+\)' '' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/pdfium/portfile.cmake
+      # Copy the source path to its proper location where vcpkg will look for it
       - ./sd -f m 'if\(SOURCE_PATH MATCHES " "\)' 'file(COPY $${SOURCE_PATH}/ DESTINATION $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nif(SOURCE_PATH MATCHES " ")' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ffmpeg/portfile.cmake
 
-      - find . -name '*.cmake' -type f -fprint0 CMAKEFILES
-      - xargs -0 ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' < CMAKEFILES
-      - xargs -0 ./sd -f m '\$\{PATCHELF\}' 'patchelf' < CMAKEFILES
-
-      - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
-
-      - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' vcpkg/ports/ncurses/portfile.cmake
+      # SPECIFIC METHOD FOR vcpkg_extract_source_archive
+      # Set the source path to the extracted module archive
+      # Remember that vcpkg_download_distfile is deleted and vcpkg_extract_source_archive has no way to know which archive to extract.
+      # This is intentional as we have already downloaded and extracted the archive from module sources.
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/ncurses")' vcpkg/ports/ncurses/portfile.cmake
-
-      - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' vcpkg/ports/icu/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/icu")' vcpkg/ports/icu/portfile.cmake
-
-      - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' vcpkg/ports/sqlite3/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/sqlite3")' vcpkg/ports/sqlite3/portfile.cmake
-
-      - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/readline-unix/portfile.cmake
+      # These has match pattern for patches and applies them accordingly
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+?(PATCHES\s+[^)]+)\)' 'set(SOURCE_PATH "downloads/readline-unix")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${SOURCE_PATH}"\n$1)' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/readline-unix/portfile.cmake
-
-      - ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' vcpkg/ports/bzip2/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+?(PATCHES\s+[^)]+)\)' 'set(SOURCE_PATH "downloads/bzip2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${SOURCE_PATH}"\n$1)' vcpkg/ports/bzip2/portfile.cmake
 
-      - ./sd -f m '        "\$\{LIBPNG_APNG_PATCH_PATH\}"' '' vcpkg/ports/libpng/portfile.cmake
-      - ./sd -f m 'unofficial-sodium::sodium_config_public' '' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
-      - ./sd -f m '\$<IF:\$<TARGET_EXISTS:uv_a>,uv_a,uv>' 'libuv::uv_a' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
-      - ./sd -f m 'target_link_libraries\(SDKlib PRIVATE stdc\+\+fs\)' '' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_target.cmake
+      #
+      # PATCHELF WORKAROUND
+      #
+      # Use local patchelf for all cmake files
+      - find . -name '*.cmake' -type f -fprint0 CMAKEFILES
+      # Prevent vcpkg from downloading patchelf online
+      # patchelf is already downloaded as part of the module sources
+      - xargs -0 ./sd -f m 'vcpkg_find_acquire_program\(PATCHELF\)' '' < CMAKEFILES
+      # Point all PATCHELF variable to local 'patchelf' binary
+      - xargs -0 ./sd -f m '\$\{PATCHELF\}' 'patchelf' < CMAKEFILES
+      
+      #
+      # MESON WORKAROUND
+      #
+      # Prevent vcpkg from downloading meson by setting the archive_path to the one downloaded from module sources
+      - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
 
+
+      #
+      # FIXES FOR BUILD ISSUES
+      #
+
+      # Not needed
+      - ./sd -f m '        "\$\{LIBPNG_APNG_PATCH_PATH\}"' '' vcpkg/ports/libpng/portfile.cmake
+      # Remove unofficial-sodium::sodium_config_public because it makes the compiler look for some missing cmake files
+      - ./sd -f m 'unofficial-sodium::sodium_config_public' '' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
+      # The if statement points to uv target, but a series of cmake files label it as libuv::uv_a
+      # This causes ld to use -luv when in fact the right label is -luv_a
+      - ./sd -f m '\$<IF:\$<TARGET_EXISTS:uv_a>,uv_a,uv>' 'libuv::uv_a' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
+      # Remove stdc++fs as it is not needed. The previous "lesserThan to greaterThan" patch does not work in vcpkg-based builds. This one solves it.
+      - ./sd -f m 'target_link_libraries\(SDKlib PRIVATE stdc\+\+fs\)' '' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_target.cmake
+      
+      # Very important. Sets these variables to defaults: CMAKE_INSTALL_LIBDIR (lib) and CMAKE_INSTALL_BINDIR (bin)
+      # This allows cmake --install do its job by installing the artifacts to prefix (/app)
       - ./sd -f m 'set\(CMAKE_INSTALL_LIBDIR "opt/megasync/lib"\)' '' desktop/contrib/cmake/modules/desktopapp_configuration.cmake
       - ./sd -f m 'set\(CMAKE_INSTALL_BINDIR "usr/bin"\)' '' desktop/contrib/cmake/modules/desktopapp_configuration.cmake
 
-      - mkdir binary-cache
-      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_INSTALL_PREFIX='/app' -DCMAKE_BUILD_TYPE=Release
-      - cmake --build 'build_dir' --target MEGAsync
+      # Make sure vcpkg tool is executable
+      - chmod +x vcpkg/vcpkg
 
-      - install -Dm755 build_dir/src/MEGASync/megasync -t /app/bin/
+      # Finally, the build process
+      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
+      - cmake --build 'build_dir' --target MEGAsync --parallel 4
+      - cmake --install 'build_dir' --prefix '/app'
       - install -Dm644 nz.mega.MEGAsync.metainfo.xml -t /app/share/metainfo/
-      - install -Dm644 desktop/src/MEGASync/platform/linux/data/megasync.desktop /app/share/applications/nz.mega.MEGAsync.desktop
-
-      - mkdir -p /app/share/icons/hicolor/
-      - cp -r desktop/src/MEGASync/platform/linux/data/icons/hicolor/* /app/share/icons/hicolor/
-      - find /app/share/icons/hicolor/ -name 'mega.png' -type f -execdir mv {} nz.mega.MEGAsync.png \;
-      - chmod -R 644 /app/share
 
     sources:
       - type: file
         path: nz.mega.MEGAsync.metainfo.xml
 
-      # Use sd instead of sed for better regex multiline matching
-      - type: archive
-        url: https://github.com/chmln/sd/releases/download/v1.0.0/sd-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
-        sha256: 297202d8cc09cb65c9d7afdfc3f23146371d0c7d7d3448cecab11685d47c709a
-        strip-components: 1
+      - type: git
+        url: https://github.com/meganz/MEGAsync.git
+        tag: v5.4.1.0_Linux
+        commit: 243d77ebb7239d7ff5cd8b7aea6c0158d1c6c813
+        dest: desktop
+        x-checker-data:
+          type: json
+          url: https://api.github.com/repos/meganz/MEGAsync/releases
+          tag-query: map(select(.tag_name | endswith("_Linux"))) | first | .tag_name
+          version-query: $tag | sub("^v"; "") | sub("_Linux$"; "")
+          timestamp-query: map(select(.tag_name==$tag)) | first | .published_at
+          is-main-source: true
+      - type: patch
+        dest: desktop
+        paths:
+          - patches/0020-build-patch-for-MEGASync.pro.patch
+          - patches/0030-remove-obsolete-ffmpeg-macros.patch
+          - patches/0040-set-DontUseNativeDialog-true.patch
+          - patches/0050-remove-version-constraints.patch
 
-      # Download patchelf as required by vcpkg_find_acquire_program(PATCHELF)
-      - type: archive
-        url: https://github.com/NixOS/patchelf/releases/download/0.14.5/patchelf-0.14.5-x86_64.tar.gz
-        sha256: 514bb05d8f0e41ea0a6cb999041acb6aa386662e9ccdbdfbbfca469fb22d44fa
-        strip-components: 2
-      
       # Download vcpkg which contains the cmake and portfiles of dependencies
       - type: git
         url: https://github.com/microsoft/vcpkg.git
@@ -112,9 +169,18 @@ modules:
         sha256: da93a3693911c15406e0a9d2562c0db142ee63b77e4268ab55ea9e87b390ec7b
         dest: vcpkg
         dest-filename: vcpkg
-      - type: shell
-        commands:
-          - chmod +x vcpkg/vcpkg
+
+      # Use sd instead of sed for better regex multiline matching
+      - type: archive
+        url: https://github.com/chmln/sd/releases/download/v1.0.0/sd-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
+        sha256: 297202d8cc09cb65c9d7afdfc3f23146371d0c7d7d3448cecab11685d47c709a
+        strip-components: 1
+
+      # Download patchelf as required by vcpkg_find_acquire_program(PATCHELF)
+      - type: archive
+        url: https://github.com/NixOS/patchelf/releases/download/0.14.5/patchelf-0.14.5-x86_64.tar.gz
+        sha256: 514bb05d8f0e41ea0a6cb999041acb6aa386662e9ccdbdfbbfca469fb22d44fa
+        strip-components: 2
 
       # Download meson as required by vcpkg-tool-meson
       - type: file
@@ -354,41 +420,11 @@ modules:
         strip-components: 1
         dest: vcpkg/downloads/sqlite3
 
-      - type: git
-        url: https://github.com/meganz/MEGAsync.git
-        tag: v5.4.1.0_Linux
-        commit: 243d77ebb7239d7ff5cd8b7aea6c0158d1c6c813
-        dest: desktop
-        x-checker-data:
-          type: json
-          url: https://api.github.com/repos/meganz/MEGAsync/releases
-          tag-query: map(select(.tag_name | endswith("_Linux"))) | first | .tag_name
-          version-query: $tag | sub("^v"; "") | sub("_Linux$"; "")
-          timestamp-query: map(select(.tag_name==$tag)) | first | .published_at
-          is-main-source: true
-      - type: patch
-        dest: desktop
-        paths:
-          - patches/0020-build-patch-for-MEGASync.pro.patch
-          - patches/0030-remove-obsolete-ffmpeg-macros.patch
-          - patches/0040-set-DontUseNativeDialog-true.patch
-          - patches/0050-remove-version-constraints.patch
-  - name: xrdb
-    sources:
-      - type: archive
-        url: https://www.x.org/releases/individual/app/xrdb-1.2.2.tar.gz
-        sha256: db2d774a35ae2f7e7ac61cc2de0dcae27fc2aa14399c35721f8300e63ea73549
-        x-checker-data:
-          type: html
-          url: https://www.x.org/releases/individual/app/
-          pattern: (xrdb-(\d\.\d+\.?\d*).tar.gz)
-    modules:
-      - name: libXmu
-        sources:
-          - type: archive
-            url: https://www.x.org/releases/individual/lib/libXmu-1.2.1.tar.gz
-            sha256: bf0902583dd1123856c11e0a5085bd3c6e9886fbbd44954464975fd7d52eb599
-            x-checker-data:
-              type: html
-              url: https://www.x.org/releases/individual/lib/
-              pattern: (libXmu-(\d\.\d+\.?\d*).tar.gz)
+      # Uncomment if you are doing some local testing. Saves time compiling the binaries.
+      # During initial build this will be empty.
+      # Once a successful build was done, copy this folder:
+      # .flatpak-builder/build/MEGAsync/binary-cache
+      # and paste it where your flatpak manifest file is.
+      - type: dir
+        path: binary-cache
+        dest: binary-cache
