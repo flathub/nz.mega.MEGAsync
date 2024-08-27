@@ -20,8 +20,9 @@ rename-icon: mega
 copy-icon: true
 build-options:
   no-debuginfo: true
-  env:
-    VCPKG_DEFAULT_BINARY_CACHE: /run/build/MEGAsync/binary-cache
+  # Uncomment for local testing
+  #env:
+  #  VCPKG_DEFAULT_BINARY_CACHE: /run/build/MEGAsync/binary-cache
 cleanup:
   - "*.a"
   - "*.la"
