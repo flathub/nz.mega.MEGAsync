@@ -32,7 +32,7 @@ modules:
     buildsystem: simple
     build-options:
       env:
-        DESKTOP_DESTDIR: /app
+        VCPKG_DEFAULT_BINARY_CACHE: binary-cache
     build-commands:
       - find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports -name 'portfile.cmake' -type f -fprint0 PORTFILES
       - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?(?:GITLAB_URL\s+[^)]+)*OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' < PORTFILES
@@ -72,7 +72,7 @@ modules:
       - ./sd -f m 'set\(CMAKE_INSTALL_BINDIR "usr/bin"\)' '' desktop/contrib/cmake/modules/desktopapp_configuration.cmake
 
       - mkdir binary-cache
-      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DVCPKG_BINARY_SOURCES='clear;files,binary-cache,readwrite' -DCMAKE_INSTALL_PREFIX='/app' -DCMAKE_BUILD_TYPE=Release
+      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_INSTALL_PREFIX='/app' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync
 
       - install -Dm755 build_dir/src/MEGASync/megasync -t /app/bin/
