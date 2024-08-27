@@ -183,7 +183,7 @@ modules:
       # Download vcpkg which contains the cmake files and portfiles of dependencies
       - type: git
         url: https://github.com/microsoft/vcpkg.git
-        branch: master
+        commit: 91b615d88a23d29a294221213811de2ac13f9363
         dest: vcpkg
 
       # Download vcpkg-tool which will be used by vcpkg-cmake
