@@ -2,9 +2,13 @@
 <component type="desktop-application">
    <id>nz.mega.MEGAsync</id>
    <name>MEGAsync</name>
-   <summary>Easy automated syncing between your computers and your MEGA cloud drive.</summary>
+   <summary>Easy automated syncing between your computers and your MEGA cloud drive</summary>
    <metadata_license>CC0-1.0</metadata_license>
    <project_license>LicenseRef-Proprietary</project_license>
+   <developer id="tld.vendor">
+        <name>MEGA CLOUD SERVICES LIMITED</name>
+    </developer>
+   <content_rating type="oars-1.0"></content_rating>
    <url type="bugtracker">https://github.com/meganz/MEGAsync/issues</url>
    <url type="help">https://help.mega.io/</url>
    <url type="homepage">https://mega.io/desktop</url>
@@ -31,12 +35,15 @@
    <screenshots>
        <screenshot type="default">
            <image>https://eu.static.mega.co.nz/3//images/mega/bottom-page/sp_sync_1_v3@2x.png</image>
+           <caption>Screenshot 1</caption>
        </screenshot>
        <screenshot>
            <image>https://eu.static.mega.co.nz/3//images/mega/bottom-page/sp_sync_3_v2@2x.png</image>
+           <caption>Screenshot 2</caption>
        </screenshot>
        <screenshot>
            <image>https://eu.static.mega.co.nz/3//images/mega/bottom-page/sp_sync_4@2x.png</image>
+           <caption>Screenshot 3</caption>
        </screenshot>
    </screenshots>
    <keywords>
