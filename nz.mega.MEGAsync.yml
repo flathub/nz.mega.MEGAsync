@@ -58,38 +58,50 @@ modules:
       # PORTFILE WORKAROUNDS
       #
       
-      # GENERIC METHOD
+      # GENERIC METHOD TO PREVENT VCPKG FROM DOWNLOADING RESOURCES
+
       # Find portfile.cmake in these two locations only
       - find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports -name 'portfile.cmake' -type f -fprint0 PORTFILES
+
       # Match all instances of vcpkg_from_* that has patches and replace it with a local source path and apply the patches
       - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?(?:GITLAB_URL\s+[^)]+)*OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' < PORTFILES
+      
       # Match all instances of vcpkg_from_* only and replace it with a local source path
       - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?(?:GITLAB_URL\s+[^)]+)*OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+\)' 'set($1 "downloads/$2")' < PORTFILES
       - xargs -0 ./sd -f m 'vcpkg_download_distfile\([^)]+\)' '' < PORTFILES
+      
       # Copy the source path to its proper location where vcpkg will look for it
       # Do this just before any configure methods executes because some portfiles does other transformations to the source path after downloading.
       - xargs -0 ./sd -f m '(vcpkg_cmake_configure|vcpkg_configure_\w+)\(' 'file(COPY $${SOURCE_PATH}/ DESTINATION $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\n$1(' < PORTFILES
 
+      
       # SPECIFIC METHOD FOR PDFIUM
+      
       # Remove pdfium's custom function that download sources
       - ./sd -f m 'pdfium_from_git\([^\)]+\)' '' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/pdfium/portfile.cmake
+      
       # Copy the source path to its proper location where vcpkg will look for it
       - ./sd -f m 'if\(SOURCE_PATH MATCHES " "\)' 'file(COPY $${SOURCE_PATH}/ DESTINATION $${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE})\nset(SOURCE_PATH "$${CURRENT_BUILDTREES_DIR}/$${TARGET_TRIPLET}-$${BUILD_TYPE}")\nif(SOURCE_PATH MATCHES " ")' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/ffmpeg/portfile.cmake
 
+      
       # SPECIFIC METHOD FOR vcpkg_extract_source_archive
+      
       # Set the source path to the extracted module archive
       # Remember that vcpkg_download_distfile is deleted and vcpkg_extract_source_archive has no way to know which archive to extract.
       # This is intentional as we have already downloaded and extracted the archive from module sources.
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/ncurses")' vcpkg/ports/ncurses/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/icu")' vcpkg/ports/icu/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/sqlite3")' vcpkg/ports/sqlite3/portfile.cmake
+      
       # These has match pattern for patches and applies them accordingly
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+?(PATCHES\s+[^)]+)\)' 'set(SOURCE_PATH "downloads/readline-unix")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${SOURCE_PATH}"\n$1)' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/readline-unix/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+?(PATCHES\s+[^)]+)\)' 'set(SOURCE_PATH "downloads/bzip2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${SOURCE_PATH}"\n$1)' vcpkg/ports/bzip2/portfile.cmake
 
+      
       #
       # PATCHELF WORKAROUND
       #
+      
       # Use local patchelf for all cmake files
       - find . -name '*.cmake' -type f -fprint0 CMAKEFILES
       # Prevent vcpkg from downloading patchelf online
@@ -98,9 +110,11 @@ modules:
       # Point all PATCHELF variable to local 'patchelf' binary
       - xargs -0 ./sd -f m '\$\{PATCHELF\}' 'patchelf' < CMAKEFILES
       
+      
       #
       # MESON WORKAROUND
       #
+      
       # Prevent vcpkg from downloading meson by setting the archive_path to the one downloaded from module sources
       - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
 
@@ -111,11 +125,14 @@ modules:
 
       # Not needed
       - ./sd -f m '        "\$\{LIBPNG_APNG_PATCH_PATH\}"' '' vcpkg/ports/libpng/portfile.cmake
+      
       # Remove unofficial-sodium::sodium_config_public because it makes the compiler look for some missing cmake files
       - ./sd -f m 'unofficial-sodium::sodium_config_public' '' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
+      
       # The if statement points to uv target, but a series of cmake files label it as libuv::uv_a
       # This causes ld to use -luv when in fact the right label is -luv_a
       - ./sd -f m '\$<IF:\$<TARGET_EXISTS:uv_a>,uv_a,uv>' 'libuv::uv_a' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
+      
       # Remove stdc++fs as it is not needed. The previous "lesserThan to greaterThan" patch does not work in vcpkg-based builds. This one solves it.
       - ./sd -f m 'target_link_libraries\(SDKlib PRIVATE stdc\+\+fs\)' '' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_target.cmake
       
@@ -127,7 +144,10 @@ modules:
       # Make sure vcpkg tool is executable
       - chmod +x vcpkg/vcpkg
 
-      # Finally, the build process
+
+      #
+      # THE BUILD PROCESS
+      #
       - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync --parallel 4
       - cmake --install 'build_dir' --prefix '/app'
