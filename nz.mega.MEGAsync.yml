@@ -425,6 +425,6 @@ modules:
       # Once a successful build was done, copy this folder:
       # .flatpak-builder/build/MEGAsync/binary-cache
       # and paste it where your flatpak manifest file is.
-      - type: dir
-        path: binary-cache
-        dest: binary-cache
+      #- type: dir
+      #  path: binary-cache
+      #  dest: binary-cache
