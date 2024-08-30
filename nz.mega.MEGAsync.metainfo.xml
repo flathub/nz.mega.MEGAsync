@@ -3,24 +3,20 @@
    <id>nz.mega.MEGAsync</id>
    <name>MEGAsync</name>
    <summary>Easy automated syncing between your computers and your MEGA cloud drive</summary>
+   <developer id="nz.mega">
+       <name>Mega Limited</name>
+   </developer>
    <metadata_license>CC0-1.0</metadata_license>
-   <project_license>LicenseRef-Proprietary</project_license>
-   <developer id="tld.vendor">
-        <name>MEGA CLOUD SERVICES LIMITED</name>
-    </developer>
-   <content_rating type="oars-1.0"></content_rating>
+   <project_license>LicenseRef-proprietary=https://github.com/meganz/MEGAsync/blob/master/LICENCE.md</project_license>
+   <url type="homepage">https://mega.io/desktop</url>
    <url type="bugtracker">https://github.com/meganz/MEGAsync/issues</url>
    <url type="help">https://help.mega.io/</url>
-   <url type="homepage">https://mega.io/desktop</url>
-   <supports>
-       <control>pointing</control>
-       <control>keyboard</control>
-       <control>touch</control>
-   </supports>
+   <url type="vcs-browser">https://github.com/meganz/MEGAsync</url>
+   <launchable type="desktop-id">nz.mega.MEGAsync.desktop</launchable>
    <description>
        <p>With the MEGA Desktop App, you'll have full control over your uploads and downloads. You can also sync or back up your computers with MEGA to prevent data loss and access the latest version of your data anywhere, anytime.</p>
        <ul>
-           <li>Manage your uploads and downloads, add transfers to the queue , sort, search for, prioritise, pause, and cancel transfers.</li>
+           <li>Manage your uploads and downloads, add transfers to the queue, sort, search for, prioritise, pause, and cancel transfers.</li>
            <li>Upload large files of unlimited size, store any type of file or folder, and with a generous transfer limits with all our plans.</li>
            <li>With MEGA's zero-knowledge encryption, your synced files are stored securely in MEGA.</li>
            <li>Create password-protected links with expiry dates for files and folders and share them with anyone, even non-MEGA users.</li>
@@ -31,7 +27,6 @@
        </ul>
        <p>You can choose from a range of plans with different storage limits of up to 16 TB. You can also get unlimited storage space with Pro Flexi and Business plans. These plans start from 3 TB of storage, but you can use more space as and when you need it.</p>
    </description>
-   <launchable type="desktop-id">nz.mega.MEGAsync.desktop</launchable>
    <screenshots>
        <screenshot type="default">
            <image>https://eu.static.mega.co.nz/3//images/mega/bottom-page/sp_sync_1_v3@2x.png</image>
@@ -50,9 +45,22 @@
        <keyword>archive</keyword>
        <keyword>backup</keyword>
        <keyword>cloud</keyword>
-       <keyword>filesharing</keyword>
+       <keyword>drive</keyword>
+       <keyword>file sharing</keyword>
        <keyword>sync</keyword>
    </keywords>
+   <content_rating type="oars-1.1">
+       <content_attribute id="money-purchasing">mild</content_attribute>
+   </content_rating>
+   <branding>
+       <color type="primary" scheme_preference="light">#ffffff</color>
+       <color type="primary" scheme_preference="dark">#1a1f26</color>
+   </branding>
+   <supports>
+       <control>pointing</control>
+       <control>keyboard</control>
+       <control>touch</control>
+   </supports>
    <releases>
        <release version="5.4.1-1.1" date="2024-08-08">
            <description>
