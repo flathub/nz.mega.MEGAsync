@@ -20,7 +20,7 @@ rename-icon: mega
 copy-icon: true
 build-options:
   no-debuginfo: true
-  # Uncomment for local testing
+  # Uncomment to speed up local testing
   #env:
   #  VCPKG_DEFAULT_BINARY_CACHE: /run/build/MEGAsync/binary-cache
 cleanup:
@@ -34,23 +34,17 @@ cleanup:
 modules:
   - name: xrdb
     sources:
-      - type: archive
-        url: https://www.x.org/releases/individual/app/xrdb-1.2.2.tar.gz
-        sha256: db2d774a35ae2f7e7ac61cc2de0dcae27fc2aa14399c35721f8300e63ea73549
-        x-checker-data:
-          type: html
-          url: https://www.x.org/releases/individual/app/
-          pattern: (xrdb-(\d\.\d+\.?\d*).tar.gz)
+      - type: git
+        url: https://gitlab.freedesktop.org/xorg/app/xrdb.git
+        tag: xrdb-1.2.2
+        commit: ff688ceacaddb8e2f345caadfe33e408d97782a0
     modules:
       - name: libXmu
         sources:
-          - type: archive
-            url: https://www.x.org/releases/individual/lib/libXmu-1.2.1.tar.gz
-            sha256: bf0902583dd1123856c11e0a5085bd3c6e9886fbbd44954464975fd7d52eb599
-            x-checker-data:
-              type: html
-              url: https://www.x.org/releases/individual/lib/
-              pattern: (libXmu-(\d\.\d+\.?\d*).tar.gz)
+          - type: git
+            url: https://gitlab.freedesktop.org/xorg/lib/libxmu.git
+            tag: libXmu-1.2.1
+            commit: 792f80402ee06ce69bca3a8f2a84295999c3a170
   - name: MEGAsync
     buildsystem: simple
     build-commands:
@@ -61,7 +55,7 @@ modules:
       # GENERIC METHOD TO PREVENT VCPKG FROM DOWNLOADING RESOURCES
 
       # Find portfile.cmake in these two locations only
-      - find vcpkg/ports desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports -name 'portfile.cmake' -type f -fprint0 PORTFILES
+      - find vcpkg/ports overlays desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports -name 'portfile.cmake' -type f -fprint0 PORTFILES
 
       # Match all instances of vcpkg_from_* that has patches and replace it with a local source path and apply the patches
       - xargs -0 ./sd -f m 'vcpkg_from_.+?\(\s*?(?:GITLAB_URL\s+[^)]+)*OUT_SOURCE_PATH\s+(\S+?)\s[^)]+?(?:REPO|REF)\s+(\S+?)\s[^)]+?(PATCHES\s+[^)]+)\)' 'set($1 "downloads/$2")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${$1}"\n$3)' < PORTFILES
@@ -91,7 +85,7 @@ modules:
       # This is intentional as we have already downloaded and extracted the archive from module sources.
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/ncurses")' vcpkg/ports/ncurses/portfile.cmake
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/icu")' vcpkg/ports/icu/portfile.cmake
-      - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/sqlite3")' vcpkg/ports/sqlite3/portfile.cmake
+      - ./sd -f m 'vcpkg_extract_source_archive\([^)]+\)' 'set(SOURCE_PATH "downloads/sqlite3")' overlays/sqlite3/portfile.cmake
       
       # These has match pattern for patches and applies them accordingly
       - ./sd -f m 'vcpkg_extract_source_archive\([^)]+?(PATCHES\s+[^)]+)\)' 'set(SOURCE_PATH "downloads/readline-unix")\nz_vcpkg_apply_patches(\nSOURCE_PATH "$${SOURCE_PATH}"\n$1)' desktop/src/MEGASync/mega/contrib/cmake/vcpkg_overlay_ports/readline-unix/portfile.cmake
@@ -115,8 +109,8 @@ modules:
       # MESON WORKAROUND
       #
       
-      # Prevent vcpkg from downloading meson by setting the archive_path to the one downloaded from module sources
-      - ./sd -f m 'vcpkg_download_distfile\(archive_path[^)]+\)' 'set(archive_path "downloads/meson.tar.gz")' vcpkg/ports/vcpkg-tool-meson/vcpkg-port-config.cmake
+      # Copy the extracted meson
+      - ./sd -f m 'vcpkg_execute_in_download_mode[\s\S]+z_vcpkg_apply_patches' 'file(COPY downloads/meson DESTINATION $${CURRENT_PACKAGES_DIR}/tools)\nz_vcpkg_apply_patches' vcpkg/ports/vcpkg-tool-meson/portfile.cmake
 
 
       #
@@ -128,10 +122,6 @@ modules:
       
       # Remove unofficial-sodium::sodium_config_public because it makes the compiler look for some missing cmake files
       - ./sd -f m 'unofficial-sodium::sodium_config_public' '' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
-      
-      # The if statement points to uv target, but a series of cmake files label it as libuv::uv_a
-      # This causes ld to use -luv when in fact the right label is -luv_a
-      - ./sd -f m '\$<IF:\$<TARGET_EXISTS:uv_a>,uv_a,uv>' 'libuv::uv_a' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_libraries.cmake
       
       # Remove stdc++fs as it is not needed. The previous "lesserThan to greaterThan" patch does not work in vcpkg-based builds. This one solves it.
       - ./sd -f m 'target_link_libraries\(SDKlib PRIVATE stdc\+\+fs\)' '' desktop/src/MEGASync/mega/contrib/cmake/modules/sdklib_target.cmake
@@ -148,7 +138,7 @@ modules:
       #
       # THE BUILD PROCESS
       #
-      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DCMAKE_BUILD_TYPE=Release
+      - cmake -S 'desktop' -B 'build_dir' -DVCPKG_ROOT='vcpkg' -DVCPKG_OVERLAY_PORTS='overlays' -DCMAKE_BUILD_TYPE=Release
       - cmake --build 'build_dir' --target MEGAsync --parallel 4
       - cmake --install 'build_dir' --prefix '/app'
       - install -Dm644 nz.mega.MEGAsync.metainfo.xml -t /app/share/metainfo/
@@ -184,41 +174,89 @@ modules:
       # Download vcpkg which contains the cmake files and portfiles of dependencies
       - type: git
         url: https://github.com/microsoft/vcpkg.git
-        commit: 91b615d88a23d29a294221213811de2ac13f9363
+        commit: 7476f0d4e77d3333fbb249657df8251c28c4faae
         dest: vcpkg
 
       # Download vcpkg-tool which will be used by vcpkg-cmake
       - type: file
-        url: https://github.com/microsoft/vcpkg-tool/releases/download/2024-08-01/vcpkg-glibc
-        sha256: da93a3693911c15406e0a9d2562c0db142ee63b77e4268ab55ea9e87b390ec7b
+        url: https://github.com/microsoft/vcpkg-tool/releases/download/2023-09-15/vcpkg-glibc
+        sha512: 08d27596961819573a66163ca5373e8f20137856d78d58154cc9ad0ba4864a1d22698d25c08c5ebcb3601f2952a476b0f1d12bed25c42cdbe6dab520870fabf3
         dest: vcpkg
         dest-filename: vcpkg
+
+      - type: shell
+        commands:
+          - mkdir overlays
+
+      # Download the vcpkg commit a42af01b72c28a8e1d7b48107b33e4f286a55ef6
+      # which contains the overlay ports for cryptopp 8.9.0
+      - type: git
+        url: https://github.com/microsoft/vcpkg.git
+        commit: a42af01b72c28a8e1d7b48107b33e4f286a55ef6
+        dest: vcpkg-a42af01b72c28a8e1d7b48107b33e4f286a55ef6
+      
+      - type: shell
+        commands:
+          - cp -r vcpkg-a42af01b72c28a8e1d7b48107b33e4f286a55ef6/ports/cryptopp overlays/
+
+      # Download the vcpkg commit d5551b8e6eeac3d1f43ee6064ad12a1a188e4ed8
+      # which contains the overlay ports for curl 8.6.0#1
+      - type: git
+        url: https://github.com/microsoft/vcpkg.git
+        commit: d5551b8e6eeac3d1f43ee6064ad12a1a188e4ed8
+        dest: vcpkg-d5551b8e6eeac3d1f43ee6064ad12a1a188e4ed8
+
+      - type: shell
+        commands:
+          - cp -r vcpkg-d5551b8e6eeac3d1f43ee6064ad12a1a188e4ed8/ports/curl overlays/
+
+      # Download the vcpkg commit 293f090a9be5a88a2a77838c6346d5ef9d3df81b
+      # which contains the overlay ports for libuv 1.44.2
+      - type: git
+        url: https://github.com/microsoft/vcpkg.git
+        commit: 293f090a9be5a88a2a77838c6346d5ef9d3df81b
+        dest: vcpkg-293f090a9be5a88a2a77838c6346d5ef9d3df81b
+
+      - type: shell
+        commands:
+          - cp -r vcpkg-293f090a9be5a88a2a77838c6346d5ef9d3df81b/ports/libuv overlays/
+
+      # Download the vcpkg commit 960d1bd0a3565ef3e717c93d8f47e69e366fddac
+      # which contains the overlay ports for sqlite3 3.46.0#1
+      - type: git
+        url: https://github.com/microsoft/vcpkg.git
+        commit: 960d1bd0a3565ef3e717c93d8f47e69e366fddac
+        dest: vcpkg-960d1bd0a3565ef3e717c93d8f47e69e366fddac
+
+      - type: shell
+        commands:
+          - cp -r vcpkg-960d1bd0a3565ef3e717c93d8f47e69e366fddac/ports/sqlite3 overlays/
 
       # Download pkgconf as required by MEGAsync for build
       - type: git
         url: https://github.com/pkgconf/pkgconf.git
-        tag: pkgconf-2.3.0
-        commit: a88c0d962a987c62d98ede5a738e37ec71005cbd
+        tag: pkgconf-1.8.0
+        commit: cef30268e1a3f79efd607c26abcf556aa314c9c4
         dest: vcpkg/downloads/pkgconf/pkgconf
 
       # Use sd instead of sed for better regex multiline matching
       - type: archive
         url: https://github.com/chmln/sd/releases/download/v1.0.0/sd-v1.0.0-x86_64-unknown-linux-gnu.tar.gz
-        sha256: 297202d8cc09cb65c9d7afdfc3f23146371d0c7d7d3448cecab11685d47c709a
+        sha512: ef6e9f9b10e72249fbf9d4ffae8cb982a62b718992e22b2b3eb169504abcc5241720b58eaf5774c634a2547e83696bdeedd5e4a15fc5fab1dee3636d7b59ea92
         strip-components: 1
 
       # Download patchelf as required by vcpkg_find_acquire_program(PATCHELF)
       - type: archive
         url: https://github.com/NixOS/patchelf/releases/download/0.14.5/patchelf-0.14.5-x86_64.tar.gz
-        sha256: 514bb05d8f0e41ea0a6cb999041acb6aa386662e9ccdbdfbbfca469fb22d44fa
+        sha512: 5e983a25b3f3f3b8582d1de6c7de30812e8d6e58e96f711f33a2634d3fb1f2370531da179927aa401328319f92465e6f76274a6f994d1dc54c74b98e704d0d29
         strip-components: 2
 
       # Download meson as required by vcpkg-tool-meson
-      - type: file
-        url: https://github.com/mesonbuild/meson/archive/1.5.1.tar.gz
-        sha256: 55f6acd5bf72c14d4aa5a781993633f84a1d117bdf2c2057735902ced9b81390
-        dest: vcpkg/downloads
-        dest-filename: meson.tar.gz
+      - type: archive
+        url: https://github.com/mesonbuild/meson/archive/bb91cea0d66d8d036063dedec1f194d663399cdf.tar.gz
+        sha512: e5888eb35dd4ab5fc0a16143cfbb5a7849f6d705e211a80baf0a8b753e2cf877a4587860a79cad129ec5f3474c12a73558ffe66439b1633d80b8044eceaff2da
+        strip-components: 1
+        dest: vcpkg/downloads/meson
 
 
       #
@@ -227,22 +265,22 @@ modules:
 
       - type: git
         url: https://github.com/google/brotli.git
-        tag: v1.1.0
-        commit: ed738e842d2fbdf2d6459e39267a633c4a9b2f5d
+        tag: v1.0.9
+        commit: e61745a6b7add50d380cfd7d3883dd6c62fc2c71
         dest: vcpkg/downloads/google/brotli
 
       - type: archive
         url: https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
         mirror-urls:
           - https://www.mirrorservice.org/sites/sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
-        sha256: ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269
+        sha512: 083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3
         strip-components: 1
         dest: vcpkg/downloads/bzip2
 
       - type: git
         url: https://github.com/c-ares/c-ares.git
-        tag: v1.33.0
-        commit: caffa5ffb3826cf0926405793361bbad11db3268
+        tag: cares-1_19_1
+        commit: 6360e96b5cf8e5980c887ce58ef727e53d77243a
         dest: vcpkg/downloads/c-ares/c-ares
 
       - type: git
@@ -269,8 +307,8 @@ modules:
 
       - type: git
         url: https://github.com/curl/curl.git
-        tag: curl-8_9_1
-        commit: 83bedbd730d62b83744cc26fa0433d3f6e2e4cd6
+        tag: curl-8_6_0
+        commit: 5ce164e0e9290c96eb7d502173426c0a135ec008
         dest: vcpkg/downloads/curl/curl
 
       - type: git
@@ -281,32 +319,32 @@ modules:
 
       - type: archive
         url: https://nchc.dl.sourceforge.net/project/freeimage/Source%20Distribution/3.18.0/FreeImage3180.zip
-        sha256: f41379682f9ada94ea7b34fe86bf9ee00935a3147be41b6569c9605a53e438fd
+        sha512: 9d9cc7e2d57552c3115e277aeb036e0455204d389026b17a3f513da5be1fd595421655488bb1ec2f76faebed66049119ca55e26e2a6d37024b3fb7ef36ad4818
         strip-components: 1
         dest: vcpkg/downloads/freeimage/Source%20Distribution
 
       - type: archive
-        url: https://nchc.dl.sourceforge.net/project/freetype/freetype2/2.13.2/freetype-2.13.2.tar.xz
-        sha256: 12991c4e55c506dd7f9b765933e62fd2be2e06d421505d7950a132e4f1bb484d
+        url: https://nchc.dl.sourceforge.net/project/freetype/freetype2/2.12.1/freetype-2.12.1.tar.xz
+        sha512: 6482de1748dc2cc01e033d21a3b492dadb1f039d13d9179685fdcf985e24d7f587cbca4c27ed8a7fdb7d9ad59612642ac5f4db062443154753295363f45c052f
         strip-components: 1
         dest: vcpkg/downloads/freetype/freetype2
 
       - type: git
         url: https://github.com/AcademySoftwareFoundation/Imath.git
-        tag: v3.1.11
-        commit: 5ac1d5335cb34f0f356c5f2461a57c845b96b115
+        tag: v3.1.9
+        commit: d690a3fcff4e877ead5ae56c7e964595ade8a35e
         dest: vcpkg/downloads/AcademySoftwareFoundation/Imath
 
       - type: archive
-        url: https://github.com/unicode-org/icu/releases/download/release-74-2/icu4c-74_2-src.tgz
-        sha256: 68db082212a96d6f53e35d60f47d38b962e9f9d207a74cfac78029ae8ff5e08c
+        url: https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.tgz
+        sha512: e788e372716eecebc39b56bbc88f3a458e21c3ef20631c2a3d7ef05794a678fe8dad482a03a40fdb9717109a613978c7146682e98ee16fade5668d641d5c48f8
         strip-components: 1
         dest: vcpkg/downloads/icu
 
       - type: git
         url: https://github.com/jasper-software/jasper.git
-        tag: version-4.2.1
-        commit: 7359c0dfa505c9d710233b8724690a4407c4702d
+        tag: version-4.0.0
+        commit: 402d096b39f4f618ad9e6ff2b4fc1b5eb260a2e4
         dest: vcpkg/downloads/jasper-software/jasper
 
       - type: git
@@ -323,20 +361,20 @@ modules:
 
       - type: git
         url: https://github.com/ebiggers/libdeflate.git
-        tag: v1.21
-        commit: 9be1c54e6086cd1f9e1e7dece96eb6d1355c93f7
+        tag: v1.19
+        commit: dd12ff2b36d603dbb7fa8838fe7e7176fcbd4f6f
         dest: vcpkg/downloads/ebiggers/libdeflate
 
       - type: git
         url: https://github.com/libjpeg-turbo/libjpeg-turbo.git
-        tag: 3.0.3
-        commit: 7fa4b5b762c9a99b46b0b7838f5fd55071b92ea5
+        tag: 3.0.0
+        commit: 6c87537f60941f3c265c339fe60d1e31d2a42ccf
         dest: vcpkg/downloads/libjpeg-turbo/libjpeg-turbo
 
       - type: git
         url: https://github.com/glennrp/libpng.git
-        tag: v1.6.43
-        commit: ed217e3e601d8e462f7fd1e04bed43ac42212429
+        tag: v1.6.39
+        commit: 07b8803110da160b158ebfef872627da6c85cbdf
         dest: vcpkg/downloads/glennrp/libpng
 
       - type: git
@@ -352,58 +390,58 @@ modules:
 
       - type: git
         url: https://github.com/jedisct1/libsodium.git
-        tag: 1.0.20-RELEASE
-        commit: 9511c982fb1d046470a8b42aa36556cdb7da15de
+        tag: 1.0.18-RELEASE
+        commit: 940ef42797baa0278df6b7fd9e67c7590f87744b
         dest: vcpkg/downloads/jedisct1/libsodium
 
       - type: git
         url: https://gitlab.com/libtiff/libtiff.git
-        tag: v4.6.0
-        commit: 8b20804fc0ddeaa93667b799b5e1a2a7dc9e3fb2
+        tag: v4.5.1
+        commit: 4f34a374b2e2cba3c8055ab77458c5730c073aff
         dest: vcpkg/downloads/libtiff/libtiff
 
       - type: git
         url: https://github.com/libuv/libuv.git
-        tag: v1.48.0
-        commit: e9f29cb984231524e3931aa0ae2c5dae1a32884e
+        tag: v1.44.2
+        commit: 0c1fa696aa502eb749c2c4735005f41ba00a27b8
         dest: vcpkg/downloads/libuv/libuv
 
       - type: git
         url: https://github.com/webmproject/libwebp.git
-        tag: v1.4.0
-        commit: 845d5476a866141ba35ac133f856fa62f0b7445f
+        tag: v1.3.2
+        commit: ca332209cb5567c9b249c86788cb2dbf8847e760
         dest: vcpkg/downloads/webmproject/libwebp
 
       - type: git
         url: https://github.com/MediaArea/MediaInfoLib.git
-        tag: v24.06
-        commit: 547f070e74f1054ebd8ef17e36f8e9d7b6e53e92
+        tag: v23.04
+        commit: dd3501560d777cd18d274254c6d3bd1c6d72b432
         dest: vcpkg/downloads/MediaArea/MediaInfoLib
 
       - type: archive
         url: https://ftp.gnu.org/gnu/ncurses/ncurses-6.4.tar.gz
         mirror-urls:
           - https://invisible-mirror.net/archives/ncurses/ncurses-6.4.tar.gz
-        sha256: 6931283d9ac87c5073f30b6290c4c75f21632bb4fc3603ac8100812bed248159
+        sha512: 1c2efff87a82a57e57b0c60023c87bae93f6718114c8f9dc010d4c21119a2f7576d0225dab5f0a227c2cfc6fb6bdbd62728e407f35fce5bf351bb50cf9e0fd34
         strip-components: 1
         dest: vcpkg/downloads/ncurses
 
       - type: git
         url: https://github.com/AcademySoftwareFoundation/openexr.git
-        tag: v3.2.4
-        commit: a1a00ffeecf627bbbc010d40700720bee48b2af7
+        tag: v3.1.8
+        commit: 68d9e1e17620cef00e59b43fa42c97fbcf90e72b
         dest: vcpkg/downloads/AcademySoftwareFoundation/openexr
 
       - type: git
         url: https://github.com/uclouvain/openjpeg.git
-        tag: v2.5.2
-        commit: 39e8c50a2f9bdcf36810ee3d41bcbf1cc78968ae
+        tag: v2.5.0
+        commit: a5891555eb49ed7cc26b2901ea680acda136d811
         dest: vcpkg/downloads/uclouvain/openjpeg
 
       - type: git
         url: https://github.com/openssl/openssl.git
-        tag: openssl-3.3.1
-        commit: db2ac4f6ebd8f3d7b2a60882992fbea1269114e2
+        tag: openssl-3.1.2
+        commit: 17a2c5111864d8e016c5f2d29c40a3746b559e9d
         dest: vcpkg/downloads/openssl/openssl
 
       - type: git
@@ -415,26 +453,26 @@ modules:
         url: https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz
         mirror-urls:
           - https://ftpmirror.gnu.org/gnu/readline/readline-8.2.tar.gz
-        sha256: 3feb7171f16a84ee82ca18a36d7b9be109a52c04f492a053331d7d1095007c35
+        sha512: 0a451d459146bfdeecc9cdd94bda6a6416d3e93abd80885a40b334312f16eb890f8618a27ca26868cebbddf1224983e631b1cbc002c1a4d1cd0d65fba9fea49a
         strip-components: 1
         dest: vcpkg/downloads/readline-unix
         
       - type: archive
-        url: https://sqlite.org/2024/sqlite-autoconf-3460100.tar.gz
-        sha256: 67d3fe6d268e6eaddcae3727fce58fcc8e9c53869bdd07a0c61e38ddf2965071
+        url: https://sqlite.org/2024/sqlite-autoconf-3460000.tar.gz
+        sha512: 631ffe4b39dffbafdcb8ac09a6a84cd7959505ecc588d8ad9278d0ff0c3ea467f87c11167e1b1a3f56d62178e679780e2be313ae3badae8ea056709d71bd4817
         strip-components: 1
         dest: vcpkg/downloads/sqlite3
 
       - type: git
         url: https://github.com/leethomason/tinyxml2.git
-        tag: 10.0.0
-        commit: 321ea883b7190d4e85cae5512a12e5eaa8f8731f
+        tag: 9.0.0
+        commit: 1dee28e51f9175a31955b9791c74c430fe13dc82
         dest: vcpkg/downloads/leethomason/tinyxml2
 
       - type: git
         url: https://github.com/tukaani-project/xz.git
-        tag: v5.6.2
-        commit: 3ec664d3f652133136587a51d4505b1abe1acdd7
+        tag: v5.4.3
+        commit: 238b4e5458b4bd2cadefb768b8ea7c6b70a191ac
         dest: vcpkg/downloads/tukaani-project/xz
 
       - type: git
@@ -445,8 +483,8 @@ modules:
 
       - type: git
         url: https://github.com/madler/zlib.git
-        tag: v1.3.1
-        commit: 51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf
+        tag: v1.3
+        commit: 09155eaa2f9270dc4ed1fa13e2b4b2613e6e4851
         dest: vcpkg/downloads/madler/zlib
 
 
