@@ -69,8 +69,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/meganz/MEGAsync.git
-        tag: v5.2.1.0_Linux
-        commit: 9937e808ba7eb87949c1d7a15e9b8e122b7ba410
+        tag: v5.6.0.0_Linux
+        commit: 2b7e629e577bb613cabf214fcac9c1f2ced4eeaa
         x-checker-data:
           type: json
           url: https://api.github.com/repos/meganz/MEGAsync/releases
@@ -135,7 +135,7 @@ modules:
         sources:
           - type: git
             url: https://github.com/c-ares/c-ares.git
-            tag: v1.32.1
+            tag: v1.34.3
             sha256: 63be2c4ee121faa47e9766f735b4cde750fff2c563f81c11e572d3dc6401e5e7
             x-checker-data:
               type: json
@@ -143,6 +143,7 @@ modules:
               tag-query: .tag_name
               version-query: .tag_name
               timestamp-query: .published_at
+            commit: c29e75d54c3743783d51a609980495cf553b4bca
         cleanup:
           - /bin
 
